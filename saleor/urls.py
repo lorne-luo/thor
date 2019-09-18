@@ -47,7 +47,7 @@ translatable_urlpatterns = [
     url(r"^search/", include((search_urls, "search"), namespace="search")),
 ]
 
-urlpatterns = non_translatable_urlpatterns + i18n_patterns(*translatable_urlpatterns)
+urlpatterns = non_translatable_urlpatterns + translatable_urlpatterns
 
 if settings.DEBUG:
     try:
