@@ -56,7 +56,7 @@ ALLOWED_CLIENT_HOSTS = env.list('ALLOWED_CLIENT_HOSTS', default=['localhost', '1
 INTERNAL_IPS = env.list('INTERNAL_IPS', default=['127.0.0.1'])
 
 # Some cloud providers (Heroku) export REDIS_URL variable instead of CACHE_URL
-REDIS_URL = env.str("REDIS_URL", default='redis://127.0.0.1:6379/3')
+REDIS_URL = env.str("REDIS_URL", default='redis://127.0.0.1:6379/4')
 if REDIS_URL:
     CACHE_URL = env.str("CACHE_URL", REDIS_URL)
 CACHES = {"default": django_cache_url.config()}

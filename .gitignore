@@ -42,3 +42,4 @@ django-queries-results.html
 .env
 env/
 venv/
+log/
