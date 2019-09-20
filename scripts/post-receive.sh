@@ -3,7 +3,7 @@
 while read oldrev newrev refname
 do
     branch=$(git rev-parse --symbolic --abbrev-ref $refname)
-    if [ "master" == "$branch" ]; then
+    if [ "dev" == "$branch" ]; then
         sudo git --git-dir=/home/git/thor.git --work-tree=/opt/thor checkout -f dev >/dev/null
         cd /opt/thor
 
