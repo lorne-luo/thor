@@ -1,12 +1,12 @@
 from django.conf import settings
 from django.conf.urls import include, url
-from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.contrib.staticfiles.views import serve
 from django.views.decorators.csrf import csrf_exempt
 from django.views.i18n import JavaScriptCatalog, set_language
 
+from saleor.auth.views import check_signature
 from .account.urls import urlpatterns as account_urls
 from .checkout.urls import checkout_urlpatterns as checkout_urls
 from .core.sitemaps import sitemaps
@@ -37,6 +37,7 @@ non_translatable_urlpatterns = [
 
 translatable_urlpatterns = [
     url(r"^", include(core_urls)),
+    url(r"^auth/check_signature/", check_signature, name='check_signature'),
     url(r"^checkout/", include((checkout_urls, "checkout"), namespace="checkout")),
     url(r"^jsi18n/$", JavaScriptCatalog.as_view(), name="javascript-catalog"),
     url(r"^order/", include((order_urls, "order"), namespace="order")),
@@ -59,9 +60,9 @@ if settings.DEBUG:
         urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls))]
 
     urlpatterns += [
-        # static files (images, css, javascript, etc.)
-        url(r"^static/(?P<path>.*)$", serve)
-    ] + static("/media/", document_root=settings.MEDIA_ROOT)
+                       # static files (images, css, javascript, etc.)
+                       url(r"^static/(?P<path>.*)$", serve)
+                   ] + static("/media/", document_root=settings.MEDIA_ROOT)
 
 if settings.ENABLE_SILK:
     urlpatterns += [url(r"^silk/", include("silk.urls", namespace="silk"))]
