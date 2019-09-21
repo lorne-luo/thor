@@ -6,7 +6,6 @@ from django.contrib.staticfiles.views import serve
 from django.views.decorators.csrf import csrf_exempt
 from django.views.i18n import JavaScriptCatalog, set_language
 
-from saleor.auth.views import check_signature
 from .account.urls import urlpatterns as account_urls
 from .checkout.urls import checkout_urlpatterns as checkout_urls
 from .core.sitemaps import sitemaps
@@ -37,7 +36,7 @@ non_translatable_urlpatterns = [
 
 translatable_urlpatterns = [
     url(r"^", include(core_urls)),
-    url(r'^auth/', include(('saleor.auth.urls','auth'),namespace='auth')),
+    url(r'^weixin/', include(('saleor.weixin.urls','auth'),namespace='weixin')),
     url(r"^checkout/", include((checkout_urls, "checkout"), namespace="checkout")),
     url(r"^jsi18n/$", JavaScriptCatalog.as_view(), name="javascript-catalog"),
     url(r"^order/", include((order_urls, "order"), namespace="order")),
