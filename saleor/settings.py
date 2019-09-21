@@ -603,3 +603,6 @@ PLUGINS = [
 # True to use DraftJS (JSON based), for the 2.0 dashboard
 # False to use the old editor from dashboard 1.0
 USE_JSON_CONTENT = env.bool("USE_JSON_CONTENT", False)
+
+SOCIAL_AUTH_WEIXIN_KEY = env.str("SOCIAL_AUTH_WEIXIN_KEY")
+SOCIAL_AUTH_WEIXIN_SECRET = env.str("SOCIAL_AUTH_WEIXIN_SECRET")

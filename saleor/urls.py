@@ -37,7 +37,7 @@ non_translatable_urlpatterns = [
 
 translatable_urlpatterns = [
     url(r"^", include(core_urls)),
-    url(r"^auth/check_signature/", check_signature, name='check_signature'),
+    url(r'^auth/', include(('saleor.auth.urls','auth'),namespace='auth')),
     url(r"^checkout/", include((checkout_urls, "checkout"), namespace="checkout")),
     url(r"^jsi18n/$", JavaScriptCatalog.as_view(), name="javascript-catalog"),
     url(r"^order/", include((order_urls, "order"), namespace="order")),

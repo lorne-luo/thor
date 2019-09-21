@@ -1,6 +1,6 @@
 import hashlib
 
-from django.http.response import HttpResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -11,7 +11,7 @@ def check_signature(request):
         timestamp = request.GET.get('timestamp')
         nonce = request.GET.get('nonce')
         echostr = request.GET.get('echostr')
-        token = 'leartd'
+        token = 'haimababa'
 
         hashlist = [token, timestamp, nonce]
         hashlist.sort()
