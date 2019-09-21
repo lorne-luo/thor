@@ -2,11 +2,11 @@ import ast
 import os.path
 import time
 import warnings
-import environ
 
 import dj_database_url
 import dj_email_url
 import django_cache_url
+import environ
 import sentry_sdk
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
@@ -62,9 +62,7 @@ if REDIS_URL:
 CACHES = {"default": django_cache_url.config()}
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default="postgres://thor:thor@localhost:5432/thor", conn_max_age=600
-    )
+    "default": env.db('DATABASE_URL')
 }
 
 TIME_ZONE = "Australia/Melbourne"
@@ -500,11 +498,11 @@ if ES_URL:
     ELASTICSEARCH_DSL = {"default": {"hosts": ES_URL}}
 
 AUTHENTICATION_BACKENDS = [
-    # "saleor.account.backends.facebook.CustomFacebookOAuth2",
-    # "saleor.account.backends.google.CustomGoogleOAuth2",
-    "saleor.account.backends.wechat.CustomWechatOAuth2",
-    "saleor.account.backends.weibo.CustomWeiboOAuth2",
-    "saleor.account.backends.qq.CustomQQOAuth2",
+    # "saleor.auth.backends.facebook.CustomFacebookOAuth2",
+    # "saleor.auth.backends.google.CustomGoogleOAuth2",
+    "saleor.auth.backends.weixin.CustomWeixinOAuth2",
+    "saleor.auth.backends.weibo.CustomWeiboOAuth2",
+    "saleor.auth.backends.qq.CustomQQOAuth2",
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
@@ -525,6 +523,7 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
 SOCIAL_AUTH_FACEBOOK_SCOPE = ["email"]
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {"fields": "id, email"}
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 # As per March 2018, Facebook requires all traffic to go through HTTPS only
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 

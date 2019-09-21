@@ -4,5 +4,5 @@ from ...site import AuthenticationBackends
 from . import BaseBackend
 
 
-class CustomWechatOAuth2(BaseBackend, WeixinOAuth2):
-    DB_NAME = AuthenticationBackends.WECHAT
+class CustomWeixinOAuth2(BaseBackend, WeixinOAuth2):
+    DB_NAME = AuthenticationBackends.WEIXIN
