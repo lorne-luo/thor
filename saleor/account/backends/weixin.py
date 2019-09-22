@@ -26,12 +26,14 @@ class CustomWeixinMixin(object):
 
 class CustomWeixinOAuth2(CustomWeixinMixin, BaseBackend, WeixinOAuth2):
     DB_NAME = AuthenticationBackends.WEIXIN
+    GET_ALL_EXTRA_DATA = True
 
 
 class CustomWeixinMpOAuth2(CustomWeixinMixin, BaseBackend, WeixinOAuth2APP):
     DB_NAME = AuthenticationBackends.WEIXINMP
     name = 'weixinmp'
     DEFAULT_SCOPE = ['snsapi_userinfo']
+    GET_ALL_EXTRA_DATA = True
 
     def auth_complete(self, *args, **kwargs):
         """Completes login process, must return user instance"""
