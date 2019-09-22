@@ -6,3 +6,4 @@ from . import BaseBackend
 
 class CustomWeixinOAuth2(BaseBackend, WeixinOAuth2):
     DB_NAME = AuthenticationBackends.WEIXIN
+    DEFAULT_SCOPE = ['snsapi_userinfo']

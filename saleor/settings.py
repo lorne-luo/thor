@@ -498,11 +498,11 @@ if ES_URL:
     ELASTICSEARCH_DSL = {"default": {"hosts": ES_URL}}
 
 AUTHENTICATION_BACKENDS = [
-    # "saleor.auth.backends.facebook.CustomFacebookOAuth2",
-    # "saleor.auth.backends.google.CustomGoogleOAuth2",
-    "saleor.auth.backends.weixin.CustomWeixinOAuth2",
-    "saleor.auth.backends.weibo.CustomWeiboOAuth2",
-    "saleor.auth.backends.qq.CustomQQOAuth2",
+    # "saleor.account.backends.facebook.CustomFacebookOAuth2",
+    # "saleor.account.backends.google.CustomGoogleOAuth2",
+    "saleor.account.backends.weixin.CustomWeixinOAuth2",
+    "saleor.account.backends.weibo.CustomWeiboOAuth2",
+    "saleor.account.backends.qq.CustomQQOAuth2",
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
@@ -603,7 +603,3 @@ PLUGINS = [
 # True to use DraftJS (JSON based), for the 2.0 dashboard
 # False to use the old editor from dashboard 1.0
 USE_JSON_CONTENT = env.bool("USE_JSON_CONTENT", False)
-
-SOCIAL_AUTH_WEIXIN_KEY = env.str("SOCIAL_AUTH_WEIXIN_KEY")
-SOCIAL_AUTH_WEIXIN_SECRET = env.str("SOCIAL_AUTH_WEIXIN_SECRET")
-WEIXIN_API_TOKEN = env.str("WEIXIN_API_TOKEN")

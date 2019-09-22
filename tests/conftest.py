@@ -15,7 +15,7 @@ from django_countries import countries
 from PIL import Image
 from prices import Money, TaxedMoney
 
-from saleor.auth.backends import BaseBackend
+from saleor.account.backends import BaseBackend
 from saleor.account.models import Address, ServiceAccount, User
 from saleor.checkout import utils
 from saleor.checkout.models import Checkout
