@@ -9,11 +9,26 @@ from . import BaseBackend
 from ...site import AuthenticationBackends
 
 
-class CustomWeixinOAuth2(BaseBackend, WeixinOAuth2):
+class CustomWeixinMixin(object):
+    def get_user_details(self, response):
+        return {
+            'openid': response.get('openid', ''),
+            'username': response.get('nickname', ''),
+            'sex': response.get('sex', ''),
+            'province': response.get('province', ''),
+            'city': response.get('city', ''),
+            'country': response.get('country', ''),
+            'privilege': response.get('privilege', []),
+            'profile_image_url': response.get('headimgurl', ''),
+            'unionid': response.get('unionid', '')
+        }
+
+
+class CustomWeixinOAuth2(CustomWeixinMixin, BaseBackend, WeixinOAuth2):
     DB_NAME = AuthenticationBackends.WEIXIN
 
 
-class CustomWeixinMpOAuth2(BaseBackend, WeixinOAuth2APP):
+class CustomWeixinMpOAuth2(CustomWeixinMixin, BaseBackend, WeixinOAuth2APP):
     DB_NAME = AuthenticationBackends.WEIXINMP
     name = 'weixinmp'
     DEFAULT_SCOPE = ['snsapi_userinfo']

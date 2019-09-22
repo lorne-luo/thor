@@ -12,16 +12,17 @@ from django.db import models
 from django.db.models import Q, Value
 from django.forms.models import model_to_dict
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django_countries.fields import Country, CountryField
 from oauthlib.common import generate_token
 from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
 from versatileimagefield.fields import VersatileImageField
 
-from ..core.models import ModelWithMetadata
-from ..core.utils.json_serializer import CustomJsonEncoder
 from . import CustomerEvents
 from .validators import validate_possible_number
+from ..core.models import ModelWithMetadata
+from ..core.utils.json_serializer import CustomJsonEncoder
 
 
 class PossiblePhoneNumberField(PhoneNumberField):
@@ -103,7 +104,7 @@ class Address(models.Model):
 
 class UserManager(BaseUserManager):
     def create_user(
-        self, email, password=None, is_staff=False, is_active=True, **extra_fields
+            self, email, password=None, is_staff=False, is_active=True, **extra_fields
     ):
         """Create a user instance with the given email and password."""
         email = UserManager.normalize_email(email)
@@ -186,6 +187,10 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
         if address:
             return "%s %s (%s)" % (address.first_name, address.last_name, self.email)
         return self.email
+
+    @cached_property
+    def social_user(self):
+        return self.social_auth.first()
 
 
 class ServiceAccount(ModelWithMetadata):

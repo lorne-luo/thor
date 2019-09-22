@@ -239,6 +239,7 @@ INSTALLED_APPS = [
     "impersonate",
     "phonenumber_field",
     "captcha",
+    "django_extensions"
 ]
 
 ENABLE_DEBUG_TOOLBAR = get_bool_from_env("ENABLE_DEBUG_TOOLBAR", False)
@@ -513,7 +514,7 @@ SOCIAL_AUTH_PIPELINE = [
     "social_core.pipeline.social_auth.social_uid",
     "social_core.pipeline.social_auth.auth_allowed",
     "social_core.pipeline.social_auth.social_user",
-    "social_core.pipeline.social_auth.associate_by_email",
+    # "social_core.pipeline.social_auth.associate_by_email",
     "social_core.pipeline.user.create_user",
     "social_core.pipeline.social_auth.associate_user",
     "social_core.pipeline.social_auth.load_extra_data",
