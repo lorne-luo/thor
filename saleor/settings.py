@@ -500,7 +500,8 @@ if ES_URL:
 AUTHENTICATION_BACKENDS = [
     # "saleor.account.backends.facebook.CustomFacebookOAuth2",
     # "saleor.account.backends.google.CustomGoogleOAuth2",
-    "saleor.account.backends.weixin.CustomWeixinOAuth2",
+    "saleor.account.backends.weixin.CustomWeixinMpOAuth2",
+    # "saleor.account.backends.weixin.CustomWeixinOAuth2",
     "saleor.account.backends.weibo.CustomWeiboOAuth2",
     "saleor.account.backends.qq.CustomQQOAuth2",
     "graphql_jwt.backends.JSONWebTokenBackend",
