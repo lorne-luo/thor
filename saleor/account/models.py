@@ -134,6 +134,7 @@ class UserManager(BaseUserManager):
 
 
 class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
+    username = models.CharField(max_length=256, unique=True, blank=False, null=False)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=256, blank=True)
     last_name = models.CharField(max_length=256, blank=True)
@@ -152,7 +153,7 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
     )
     avatar = VersatileImageField(upload_to="user-avatars", blank=True, null=True)
 
-    USERNAME_FIELD = "email"
+    USERNAME_FIELD = "username"
 
     objects = UserManager()
 

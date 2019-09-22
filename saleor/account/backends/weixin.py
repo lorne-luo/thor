@@ -10,15 +10,23 @@ from ...site import AuthenticationBackends
 
 
 class CustomWeixinMixin(object):
+    EXTRA_DATA = [
+        ('openid', 'openid'),
+        ('sex', 'sex'),
+        ('province', 'province'),
+        ('city', 'city'),
+        ('country', 'country'),
+        ('privilege', 'privilege'),
+        ('unionid', 'unionid'),
+        ('headimgurl', 'profile_image_url'),
+    ]
+
     def get_user_details(self, response):
+        openid=response.get('openid', '')
         return {
-            'openid': response.get('openid', ''),
-            'username': response.get('nickname', ''),
-            'sex': response.get('sex', ''),
-            'province': response.get('province', ''),
-            'city': response.get('city', ''),
-            'country': response.get('country', ''),
-            'privilege': response.get('privilege', []),
+            'email': f'{openid}@weixinmp.com',
+            'first_name': response.get('nickname', ''),
+            'last_name': response.get('nickname', ''),
             'profile_image_url': response.get('headimgurl', ''),
             'unionid': response.get('unionid', '')
         }
@@ -26,7 +34,6 @@ class CustomWeixinMixin(object):
 
 class CustomWeixinOAuth2(CustomWeixinMixin, BaseBackend, WeixinOAuth2):
     DB_NAME = AuthenticationBackends.WEIXIN
-    GET_ALL_EXTRA_DATA = True
 
 
 class CustomWeixinMpOAuth2(CustomWeixinMixin, BaseBackend, WeixinOAuth2APP):
