@@ -142,6 +142,14 @@
         </h3>
         <div class="card-deck-wrapper account__addresses">
           <div class="row card-deck">
+            <div class="col-md-12">
+              <div class="col-md-12">
+                <a href="{% url "account:address-add" %}">
+                  {% trans "Add address" context "User address action" %}
+                </a>
+                <br/>
+              </div>
+            </div>
             {% for address in addresses %}
               <div class="col-md-6">
                 <div class="card card-block">
@@ -153,6 +161,9 @@
                       </a>
                     </li>
                     <li>
+                      {% if request.user.default_shipping_address == address %}
+                        <span>{% trans "Default" context "User address action" %}</span>
+                      {% endif %}
                       <a class="delete-icon">
                         <svg data-src="{% static "images/delete.svg" %}" height="20px" width="20px" />
                       </a>

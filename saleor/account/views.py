@@ -145,6 +145,22 @@ def address_edit(request, pk):
 
 
 @login_required
+def address_add(request):
+    address_form, preview = get_address_form(None, country_code='CN')
+    if address_form.is_valid() and not preview:
+        address = address_form.save()
+        if 'id' not in address_form.cleaned_data:
+            request.user.addresses.add(address)
+
+        message = pgettext("Storefront message", "Address successfully updated.")
+        messages.success(request, message)
+        return HttpResponseRedirect(reverse("account:details") + "#addresses")
+    return TemplateResponse(
+        request, "account/address_edit.html", {"address_form": address_form}
+    )
+
+
+@login_required
 def address_delete(request, pk):
     address = get_object_or_404(request.user.addresses, pk=pk)
     if request.method == "POST":

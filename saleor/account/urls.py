@@ -28,6 +28,7 @@ urlpatterns = [
         ),
         name="reset-password-complete",
     ),
+    url(r"^address/add/$", views.address_add, name="address-add"),
     url(r"^address/(?P<pk>\d+)/edit/$", views.address_edit, name="address-edit"),
     url(r"^address/(?P<pk>\d+)/delete/$", views.address_delete, name="address-delete"),
     url(r"^delete/$", views.account_delete, name="delete"),
