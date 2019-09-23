@@ -6,3 +6,4 @@ from . import BaseBackend
 
 class CustomWeiboOAuth2(BaseBackend, WeiboOAuth2):
     DB_NAME = AuthenticationBackends.WEIBO
+    name = AuthenticationBackends.WEIBO

@@ -19,6 +19,7 @@ from oauthlib.common import generate_token
 from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
 from versatileimagefield.fields import VersatileImageField
 
+from saleor.site import AuthenticationBackends
 from . import CustomerEvents
 from .validators import validate_possible_number
 from ..core.models import ModelWithMetadata
@@ -131,6 +132,15 @@ class UserManager(BaseUserManager):
 
     def staff(self):
         return self.get_queryset().filter(is_staff=True)
+
+    def weixinmp(self):
+        return self.filter(social_auth__provider=AuthenticationBackends.WEIXINMP)
+
+    def weibo(self):
+        return self.filter(social_auth__provider=AuthenticationBackends.WEIBO)
+
+    def qq(self):
+        return self.filter(social_auth__provider=AuthenticationBackends.QQ)
 
 
 class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):

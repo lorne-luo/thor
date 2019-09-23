@@ -34,11 +34,12 @@ class CustomWeixinMixin(object):
 
 class CustomWeixinOAuth2(CustomWeixinMixin, BaseBackend, WeixinOAuth2):
     DB_NAME = AuthenticationBackends.WEIXIN
+    name = AuthenticationBackends.WEIXIN
 
 
 class CustomWeixinMpOAuth2(CustomWeixinMixin, BaseBackend, WeixinOAuth2APP):
     DB_NAME = AuthenticationBackends.WEIXINMP
-    name = 'weixinmp'
+    name = AuthenticationBackends.WEIXINMP
     DEFAULT_SCOPE = ['snsapi_userinfo']
     GET_ALL_EXTRA_DATA = True
 

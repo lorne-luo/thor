@@ -6,3 +6,4 @@ from . import BaseBackend
 
 class CustomQQOAuth2(BaseBackend, QQOAuth2):
     DB_NAME = AuthenticationBackends.QQ
+    name = AuthenticationBackends.QQ
