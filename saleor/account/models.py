@@ -53,22 +53,44 @@ class AddressQueryset(models.QuerySet):
 
 
 class Address(models.Model):
-    first_name = models.CharField(max_length=256, blank=True)
+    first_name = models.CharField(pgettext_lazy(
+        "Customer form: Given name field", "Given name"
+    ), max_length=256, blank=True)
     last_name = models.CharField(max_length=256, blank=True)
     company_name = models.CharField(max_length=256, blank=True)
-    street_address_1 = models.CharField(max_length=256, blank=True)
+    street_address_1 = models.CharField(pgettext_lazy(
+        "Address", "Address"
+    ), max_length=256, blank=True)
     street_address_2 = models.CharField(max_length=256, blank=True)
-    city = models.CharField(max_length=256, blank=True)
-    city_area = models.CharField(max_length=128, blank=True)
+    city = models.CharField(pgettext_lazy(
+        "City", "City"
+    ), max_length=256, blank=True)
+    city_area = models.CharField(pgettext_lazy(
+        "City area", "District"
+    ), max_length=128, blank=True)
     postal_code = models.CharField(max_length=20, blank=True)
-    country = CountryField()
-    country_area = models.CharField(max_length=128, blank=True)
-    phone = PossiblePhoneNumberField(blank=True, default="")
+    country = CountryField(pgettext_lazy(
+        "Address field", "County"
+    ))
+    country_area = models.CharField(pgettext_lazy(
+        "Address field", "Province"
+    ), max_length=128, blank=True)
+    phone = PossiblePhoneNumberField(pgettext_lazy(
+        "Phone number", "Phone number"
+    ), blank=True, default="")
 
     objects = AddressQueryset.as_manager()
 
     class Meta:
         ordering = ("pk",)
+
+    @property
+    def province(self):
+        return self.country_area
+
+    @property
+    def district(self):
+        return self.city_area
 
     @property
     def full_name(self):
@@ -144,9 +166,9 @@ class UserManager(BaseUserManager):
 
 
 class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
-    username = models.CharField(max_length=256, unique=True, blank=False, null=False)
+    username = models.CharField("电子邮件", max_length=256, unique=True, blank=False, null=False)
     email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=256, blank=True)
+    first_name = models.CharField(max_length=256, blank=False)
     last_name = models.CharField(max_length=256, blank=True)
     addresses = models.ManyToManyField(
         Address, blank=True, related_name="user_addresses"
@@ -162,6 +184,9 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
         Address, related_name="+", null=True, blank=True, on_delete=models.SET_NULL
     )
     avatar = VersatileImageField(upload_to="user-avatars", blank=True, null=True)
+    phone = PossiblePhoneNumberField(pgettext_lazy(
+        "Phone number", "Phone number"
+    ), blank=True, default="")
 
     USERNAME_FIELD = "username"
 
