@@ -63,7 +63,7 @@
                       </td>
                       <td>
                         {% if default_address %}
-                          {{ default_address.city }}, {{ default_address.get_country_display }}
+                          {{ default_address.province }} {{ default_address.city }} {{ default_address.district }} {{ default_address.street_address_1 }}
                         {% else %}
                           -
                         {% endif %}

@@ -68,7 +68,7 @@
                   {% trans "Note" context "Customer field" %}
                 </h4>
                 <p>
-                  {{ customer.note }}
+                  {{ customer.note|linebreaksbr }}
                 </p>
               </div>
             </div>
@@ -153,7 +153,7 @@
               {% for note in notes %}
                 <li class="list-item list-item--spaced">
                   <small class="list-item-author">{{ note.user }} - {{ note.date }}</small>
-                  <p>{{ note.content }}</p>
+                  <p>{{ note.content|linebreaksbr }}</p>
                 </li>
               {% endfor %}
             </ul>
