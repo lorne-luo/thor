@@ -2,7 +2,7 @@
 # Copyright (C) 2017 Mirumee Software
 # This file is distributed under the same license as the Saleor package.
 # Mirumee Software <hello@mirumee.com>, 2017.
-# 
+#
 # Translators:
 # dr.web mike <cncaiker@gmail.com>, 2018
 # Slade Liu <laplaceliu@outlook.com>, 2019
@@ -14,7 +14,7 @@
 # Patryk Zawadzki <patrys@room-303.com>, 2019
 # iorj <2806198697@qq.com>, 2019
 # 陈 铭轩 <cmx18682659373@gmail.com>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -302,7 +302,7 @@ msgstr "备注"
 #: saleor/dashboard/customer/forms.py:112
 msgctxt "Customer form: is active toggle"
 msgid "User is active"
-msgstr "活动的用户"
+msgstr "激活的用户"
 
 #: saleor/dashboard/customer/forms.py:123
 msgctxt "Customer note"
@@ -1980,7 +1980,7 @@ msgstr "电子邮件"
 #: saleor/dashboard/staff/forms.py:36
 msgctxt "User active toggle"
 msgid "User is active"
-msgstr "活动的用户"
+msgstr "激活的用户"
 
 #: saleor/dashboard/staff/forms.py:37
 msgctxt "User staff toggle"

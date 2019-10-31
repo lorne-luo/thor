@@ -1734,6 +1734,11 @@ msgctxt "User address action"
 msgid "Edit"
 msgstr ""
 
+#: templates/account/details.html:159
+msgctxt "User address action"
+msgid "Default address"
+msgstr ""
+
 #: templates/account/details.html:168
 msgctxt "No addresses text"
 msgid "You will see new addresses here after first successful checkout."
