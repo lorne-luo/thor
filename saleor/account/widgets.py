@@ -4,7 +4,7 @@ from phonenumbers import COUNTRY_CODE_TO_REGION_CODE
 
 phone_prefixes = [
     ("+{}".format(k), "+{}".format(k))
-    for (k, v) in sorted(COUNTRY_CODE_TO_REGION_CODE.items())
+    for (k, v) in sorted(COUNTRY_CODE_TO_REGION_CODE.items()) if 'CN' in v # fixme limit to china
 ]
 
 

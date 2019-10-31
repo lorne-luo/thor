@@ -10,9 +10,6 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import pgettext, ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
-from ..account import events as account_events
-from ..checkout.utils import find_and_assign_anonymous_checkout
-from ..core.utils import get_paginator_items
 from .emails import send_account_delete_confirmation_email
 from .forms import (
     ChangePasswordForm,
@@ -24,6 +21,9 @@ from .forms import (
     logout_on_password_change,
 )
 from .models import User
+from ..account import events as account_events
+from ..checkout.utils import find_and_assign_anonymous_checkout
+from ..core.utils import get_paginator_items
 
 
 @find_and_assign_anonymous_checkout()
@@ -105,7 +105,11 @@ def details(request):
 
 
 def get_or_process_password_form(request):
-    form = ChangePasswordForm(data=request.POST or None, user=request.user)
+    if 'id_old_password' in request.POST or 'id_new_password1' in request.POST:
+        data = request.POST
+    else:
+        data = None
+    form = ChangePasswordForm(data=data, user=request.user)
     if form.is_valid():
         form.save()
         logout_on_password_change(request, form.user)

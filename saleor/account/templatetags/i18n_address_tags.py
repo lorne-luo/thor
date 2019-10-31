@@ -19,3 +19,10 @@ def format_address(address, include_phone=True, inline=False, latin=False):
     if include_phone and address.phone:
         address_lines.append(address.phone)
     return {"address_lines": address_lines, "inline": inline}
+
+
+
+@register.inclusion_tag("formatted_address.html")
+def format_address_cn(address, include_phone=True, inline=False, latin=False):
+    address_lines = (address.first_name,address.phone.national_number,address.city_area,address.city,address.street_address_1)
+    return {"address_lines": address_lines, "inline": inline}

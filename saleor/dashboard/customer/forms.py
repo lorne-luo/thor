@@ -100,7 +100,7 @@ class CustomerForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "note", "is_active"]
+        fields = ["first_name", "email", "note", "is_active"] # remove "last_name" for China
         labels = {
             "first_name": pgettext_lazy(
                 "Customer form: Given name field", "Given name"

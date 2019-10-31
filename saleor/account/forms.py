@@ -5,6 +5,9 @@ from django.contrib.auth import forms as django_forms, update_session_auth_hash
 from django.utils.translation import pgettext, pgettext_lazy
 from phonenumbers.phonenumberutil import country_code_for_region
 
+from saleor.account.widgets import PhonePrefixWidget
+from . import emails
+from .i18n import AddressMetaForm, get_address_form_class, PossiblePhoneNumberFormField
 from ..account import events as account_events
 from ..account.models import User
 from ..extensions.manager import get_extensions_manager
@@ -125,13 +128,13 @@ class PasswordResetForm(django_forms.PasswordResetForm, FormWithReCaptcha):
         return active_users
 
     def send_mail(
-        self,
-        subject_template_name,
-        email_template_name,
-        context,
-        from_email,
-        to_email,
-        html_email_template_name=None,
+            self,
+            subject_template_name,
+            email_template_name,
+            context,
+            from_email,
+            to_email,
+            html_email_template_name=None,
     ):
         # Passing the user object to the Celery task throws an
         # error "'User' is not JSON serializable". Since it's not used in our
@@ -141,10 +144,11 @@ class PasswordResetForm(django_forms.PasswordResetForm, FormWithReCaptcha):
 
 
 class NameForm(forms.ModelForm):
+    phone = PossiblePhoneNumberFormField(widget=PhonePrefixWidget, required=False)
     class Meta:
         model = User
         # fields = ["first_name", "last_name"]
-        fields = ["first_name"]
+        fields = ["first_name", "email", "phone"]
         labels = {
             "first_name": pgettext_lazy(
                 "Customer form: Given name field", "Given name"

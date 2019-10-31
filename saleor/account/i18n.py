@@ -71,7 +71,6 @@ class AddressMetaForm(forms.ModelForm):
 
 
 class AddressForm(forms.ModelForm):
-
     AUTOCOMPLETE_MAPPING = [
         ("first_name", "given-name"),
         ("last_name", "family-name"),
@@ -150,8 +149,18 @@ class AddressForm(forms.ModelForm):
         return data
 
 
-class CountryAwareAddressForm(AddressForm):
+class AddressFormCN(AddressForm):
+    phone = PossiblePhoneNumberFormField(label=pgettext_lazy(
+        "Phone number", "Phone number"
+    ), widget=PhonePrefixWidget, required=False)
 
+    class Meta:
+        model = Address
+        # remove "last_name", "street_address_2" for China
+        fields = ["first_name", "phone", "country", "country_area", "city", "city_area", "street_address_1"]
+
+
+class CountryAwareAddressForm(AddressForm):
     I18N_MAPPING = [
         ("name", ["first_name", "last_name"]),
         ("street_address", ["street_address_1", "street_address_2"]),
@@ -274,6 +283,37 @@ def construct_address_form(country_code, i18n_rules):
     return class_
 
 
+class CNAddressForm(CountryAwareAddressForm):
+    I18N_MAPPING = [
+        ("name", ["first_name", ]),
+        ("street_address", ["street_address_1"]),
+        ("city_area", ["city_area"]),
+        ("country_area", ["country_area"]),
+        ("city", ["city"]),
+        ("sorting_code", []),
+        ("country_code", ["country"]),
+    ]
+
+
+# def get_cn_address_form():
+#     country_code = 'CN'
+#     country_rules = i18naddress.get_validation_rules({"country_code": country_code})
+#     country_rules.allowed_fields.remove('postal_code')
+#     country_rules.allowed_fields.remove('company_name')
+#
+#     class_name = "AddressForm%s" % country_code
+#     base_class = CNAddressForm
+#     form_kwargs = {
+#         "Meta": type(str("Meta"), (base_class.Meta, object), {}),
+#         "formfield_callback": None,
+#     }
+#     class_ = type(base_class)(str(class_name), (base_class,), form_kwargs)
+#     update_base_fields(class_, country_rules)
+#     class_.i18n_country_code = country_code
+#     class_.i18n_fields_order = property(get_form_i18n_lines)
+#     return class_
+
+
 for country in countries.countries.keys():
     try:
         country_rules = i18naddress.get_validation_rules({"country_code": country})
@@ -284,11 +324,15 @@ for country in countries.countries.keys():
 COUNTRY_CHOICES = [
     (code, label)
     for code, label in countries.countries.items()
-    if code not in UNKNOWN_COUNTRIES
+    if code in ['CN']  # fixme hard code limit to CN AU
 ]
+
 # Sort choices list by country name
 COUNTRY_CHOICES = sorted(COUNTRY_CHOICES, key=lambda choice: choice[1])
 
 for country, label in COUNTRY_CHOICES:
-    country_rules = i18naddress.get_validation_rules({"country_code": country})
-    COUNTRY_FORMS[country] = construct_address_form(country, country_rules)
+    if country == 'CN':
+        COUNTRY_FORMS[country] = AddressFormCN
+    else:
+        country_rules = i18naddress.get_validation_rules({"country_code": country})
+        COUNTRY_FORMS[country] = construct_address_form(country, country_rules)
