@@ -43,3 +43,4 @@ django-queries-results.html
 env/
 venv/
 log/
+dump.rdb

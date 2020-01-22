@@ -1,3 +1,4 @@
+import logging
 from typing import Set
 
 from django.conf import settings
@@ -24,6 +25,8 @@ from . import CustomerEvents
 from .validators import validate_possible_number
 from ..core.models import ModelWithMetadata
 from ..core.utils.json_serializer import CustomJsonEncoder
+
+logger = logging.getLogger(__name__)
 
 
 class PossiblePhoneNumberField(PhoneNumberField):
@@ -130,6 +133,7 @@ class UserManager(BaseUserManager):
             self, email, password=None, is_staff=False, is_active=True, **extra_fields
     ):
         """Create a user instance with the given email and password."""
+        logger.debug(f'[CREATE_USER] extra_fields={extra_fields}')
         email = UserManager.normalize_email(email)
         # Google OAuth2 backend send unnecessary username field
         extra_fields.pop("username", None)
