@@ -3,13 +3,7 @@ import logging
 import os
 
 from django.conf import settings
-from django.contrib.sites.models import Site
 from social_core.pipeline.user import user_details
-
-from saleor.site import AuthenticationBackends
-
-weixin_key = Site.objects.get(id=settings.SITE_ID).settings.authorizationkey_set.filter(
-    name=AuthenticationBackends.WEIXIN).first()
 
 logger = logging.getLogger(__name__)
 

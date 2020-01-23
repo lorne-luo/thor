@@ -170,7 +170,6 @@ class UserManager(BaseUserManager):
 
 
 class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
-    username = models.CharField(max_length=256, unique=True, blank=False, null=False)
     email = models.EmailField(pgettext_lazy(
         "Email", "Email"
     ), unique=True)
@@ -194,7 +193,7 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
         "Phone number", "Phone number"
     ), blank=True, default="")
 
-    USERNAME_FIELD = "username"
+    USERNAME_FIELD = "email"
 
     objects = UserManager()
 
