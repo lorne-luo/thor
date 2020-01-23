@@ -73,10 +73,10 @@ class AddressMetaForm(forms.ModelForm):
 class AddressForm(forms.ModelForm):
     AUTOCOMPLETE_MAPPING = [
         ("first_name", "given-name"),
-        ("last_name", "family-name"),
+        # ("last_name", "family-name"),
         ("company_name", "organization"),
         ("street_address_1", "address-line1"),
-        ("street_address_2", "address-line2"),
+        # ("street_address_2", "address-line2"),
         ("city", "address-level2"),
         ("postal_code", "postal-code"),
         ("country_area", "address-level1"),
@@ -91,12 +91,12 @@ class AddressForm(forms.ModelForm):
         exclude = []
         labels = {
             "first_name": pgettext_lazy("Personal name", "Given name"),
-            "last_name": pgettext_lazy("Personal name", "Family name"),
+            # "last_name": pgettext_lazy("Personal name", "Family name"),
             "company_name": pgettext_lazy(
                 "Company or organization", "Company or organization"
             ),
             "street_address_1": pgettext_lazy("Address", "Address"),
-            "street_address_2": "",
+            # "street_address_2": "",
             "city": pgettext_lazy("City", "City"),
             "city_area": pgettext_lazy("City area", "District"),
             "postal_code": pgettext_lazy("Postal code", "Postal code"),
@@ -108,9 +108,9 @@ class AddressForm(forms.ModelForm):
             "street_address_1": pgettext_lazy(
                 "Address", "Street address, P.O. box, company name"
             ),
-            "street_address_2": pgettext_lazy(
-                "Address", "Apartment, suite, unit, building, floor, etc"
-            ),
+            # "street_address_2": pgettext_lazy(
+            #     "Address", "Apartment, suite, unit, building, floor, etc"
+            # ),
         }
 
     phone = PossiblePhoneNumberFormField(widget=PhonePrefixWidget, required=False)
@@ -162,8 +162,8 @@ class AddressFormCN(AddressForm):
 
 class CountryAwareAddressForm(AddressForm):
     I18N_MAPPING = [
-        ("name", ["first_name", "last_name"]),
-        ("street_address", ["street_address_1", "street_address_2"]),
+        ("name", ["first_name"]),
+        ("street_address", ["street_address_1"]),
         ("city_area", ["city_area"]),
         ("country_area", ["country_area"]),
         ("company_name", ["company_name"]),
@@ -193,11 +193,12 @@ class CountryAwareAddressForm(AddressForm):
     def validate_address(self, data):
         try:
             data["country_code"] = data.get("country", "")
-            if data["street_address_1"] or data["street_address_2"]:
-                data["street_address"] = "%s\n%s" % (
-                    data["street_address_1"],
-                    data["street_address_2"],
-                )
+            # if data["street_address_1"] or data["street_address_2"]:
+            #     data["street_address"] = "%s\n%s" % (
+            #         data["street_address_1"],
+            #         data["street_address_2"],
+            #     )
+            data["street_address"] = data["street_address_1"]
             data = i18naddress.normalize_address(data)
             del data["sorting_code"]
         except i18naddress.InvalidAddress as exc:

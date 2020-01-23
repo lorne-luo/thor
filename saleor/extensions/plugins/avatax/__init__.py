@@ -304,7 +304,7 @@ def generate_request_data(
         "addresses": {
             "shipFrom": {
                 "line1": company_address.get("street_address_1"),
-                "line2": company_address.get("street_address_2"),
+                # "line2": company_address.get("street_address_2"),
                 "city": company_address.get("city"),
                 "region": company_address.get("country_area"),
                 "country": company_address.get("country"),
@@ -312,7 +312,7 @@ def generate_request_data(
             },
             "shipTo": {
                 "line1": address.get("street_address_1"),
-                "line2": address.get("street_address_2"),
+                # "line2": address.get("street_address_2"),
                 "city": address.get("city"),
                 "region": address.get("country_area"),
                 "country": address.get("country"),

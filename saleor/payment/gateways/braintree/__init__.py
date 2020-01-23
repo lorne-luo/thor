@@ -37,7 +37,7 @@ def get_billing_data(payment_information: PaymentData) -> Dict:
             "company": billing_info.company_name,
             "postal_code": billing_info.postal_code,
             "street_address": billing_info.street_address_1,
-            "extended_address": billing_info.street_address_2,
+            # "extended_address": billing_info.street_address_2,
             "locality": billing_info.city,
             "region": billing_info.country_area,
             "country_code_alpha2": billing_info.country,

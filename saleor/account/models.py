@@ -211,15 +211,12 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
             ),
         )
 
+    @property
+    def full_name(self):
+        return self.first_name or self.last_name
+
     def get_full_name(self):
-        if self.first_name or self.last_name:
-            return ("%s %s" % (self.first_name, self.last_name)).strip()
-        if self.default_billing_address:
-            first_name = self.default_billing_address.first_name
-            last_name = self.default_billing_address.last_name
-            if first_name or last_name:
-                return ("%s %s" % (first_name, last_name)).strip()
-        return self.email
+        return self.full_name
 
     def get_short_name(self):
         return self.email
@@ -233,6 +230,25 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
     @cached_property
     def social_user(self):
         return self.social_auth.first()
+
+    @cached_property
+    def avatar_url(self):
+        if self.auth_source == AuthenticationBackends.WEIXINMP:
+            return self.social_user.extra_data.get('headimgurl')
+        if self.avatar:
+            return self.avatar.url
+
+    @cached_property
+    def auth_source(self):
+        if self.social_user:
+            return self.social_user.provider
+        return None
+
+    @cached_property
+    def access_token(self):
+        if self.social_user:
+            if self.auth_source == AuthenticationBackends.WEIXINMP:
+                return self.social_user.extra_data.get('access_token')
 
 
 class ServiceAccount(ModelWithMetadata):

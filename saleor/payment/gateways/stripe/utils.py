@@ -89,7 +89,7 @@ def shipping_to_stripe_dict(shipping: AddressData) -> Dict:
         "phone": shipping.phone,
         "address": {
             "line1": shipping.street_address_1,
-            "line2": shipping.street_address_2,
+            # "line2": shipping.street_address_2,
             "city": shipping.city,
             "state": shipping.country_area,
             "postal_code": shipping.postal_code,

@@ -40,7 +40,7 @@ class AddressData:
     last_name: str
     company_name: str
     street_address_1: str
-    street_address_2: str
+    # street_address_2: str
     city: str
     city_area: str
     postal_code: str

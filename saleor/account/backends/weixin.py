@@ -26,7 +26,7 @@ class CustomWeixinMixin(object):
         return {
             'email': f'{openid}@weixinmp.com',
             'first_name': response.get('nickname', ''),
-            'last_name': response.get('nickname', ''),
+            # 'last_name': response.get('nickname', ''),
             'profile_image_url': response.get('headimgurl', ''),
             'unionid': response.get('unionid', '')
         }

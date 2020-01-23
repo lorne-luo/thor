@@ -25,7 +25,7 @@ class AddressInput(graphene.InputObjectType):
     last_name = graphene.String(description="Family name.")
     company_name = graphene.String(description="Company or organization.")
     street_address_1 = graphene.String(description="Address.")
-    street_address_2 = graphene.String(description="Address.")
+    # street_address_2 = graphene.String(description="Address.")
     city = graphene.String(description="City.")
     city_area = graphene.String(description="District.")
     postal_code = graphene.String(description="Postal code.")
@@ -62,7 +62,7 @@ class Address(CountableDjangoObjectType):
             "phone",
             "postal_code",
             "street_address_1",
-            "street_address_2",
+            # "street_address_2",
         ]
 
     @staticmethod

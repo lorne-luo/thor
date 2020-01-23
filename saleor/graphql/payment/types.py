@@ -140,7 +140,7 @@ class Payment(CountableDjangoObjectType):
             last_name=root.billing_last_name,
             company_name=root.billing_company_name,
             street_address_1=root.billing_address_1,
-            street_address_2=root.billing_address_2,
+            # street_address_2=root.billing_address_2,
             city=root.billing_city,
             city_area=root.billing_city_area,
             postal_code=root.billing_postal_code,

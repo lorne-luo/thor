@@ -83,7 +83,7 @@ def create_payment(
         "billing_last_name": billing_address.last_name,
         "billing_company_name": billing_address.company_name,
         "billing_address_1": billing_address.street_address_1,
-        "billing_address_2": billing_address.street_address_2,
+        # "billing_address_2": billing_address.street_address_2,
         "billing_city": billing_address.city,
         "billing_postal_code": billing_address.postal_code,
         "billing_country_code": billing_address.country.code,
