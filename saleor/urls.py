@@ -36,7 +36,7 @@ non_translatable_urlpatterns = [
 
 translatable_urlpatterns = [
     url(r"^", include(core_urls)),
-    url(r'^weixin/', include(('saleor.weixin.urls','auth'),namespace='weixin')),
+    url(r'^weixin/', include(('saleor.weixin.urls', 'auth'), namespace='weixin')),
     url(r"^checkout/", include((checkout_urls, "checkout"), namespace="checkout")),
     url(r"^jsi18n/$", JavaScriptCatalog.as_view(), name="javascript-catalog"),
     url(r"^order/", include((order_urls, "order"), namespace="order")),
