@@ -606,4 +606,6 @@ PLUGINS = [
 # False to use the old editor from dashboard 1.0
 USE_JSON_CONTENT = env.bool("USE_JSON_CONTENT", False)
 
-WEIXIN_API_TOKEN = env.str('WEIXIN_API_TOKEN')
+WEIXIN_APP_ID = env.str('SOCIAL_AUTH_WEIXIN_KEY')
+WEIXIN_APP_SECRET = env.str('SOCIAL_AUTH_WEIXIN_SECRET')
+WEIXIN_APP_TOKEN = env.str('WEIXIN_APP_TOKEN')
