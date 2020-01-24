@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls import url
+from django.views.decorators.csrf import csrf_exempt
 from weixin import Weixin
 
 from .views import check_signature
@@ -11,7 +12,7 @@ weixin = Weixin(config)
 
 urlpatterns = [
     url(r"^auth/check_signature/", check_signature, name='check_signature'),
-    url(r'^$', weixin.django_view_func(), name='index'),
+    url(r'^$', csrf_exempt(weixin.django_view_func()), name='index'),
 
     # login entry /login/weixinmp/
 ]
