@@ -12,6 +12,7 @@ from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django_prices.utils.formatting import get_currency_fraction
 from sentry_sdk.integrations.django import DjangoIntegration
+from social_core.pipeline.social_auth import associate_user
 
 
 def get_list(text):
@@ -508,16 +509,16 @@ AUTHENTICATION_BACKENDS = [
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
-
+associate_user
 SOCIAL_AUTH_PIPELINE = [
     "social_core.pipeline.social_auth.social_details",
-    "social_core.pipeline.social_auth.social_uid",
-    "social_core.pipeline.social_auth.auth_allowed",
-    "social_core.pipeline.social_auth.social_user",
+    # "social_core.pipeline.social_auth.social_uid",
+    # "social_core.pipeline.social_auth.auth_allowed",
+    # "social_core.pipeline.social_auth.social_user",
     # "social_core.pipeline.social_auth.associate_by_email",
     "social_core.pipeline.user.create_user",
-    "social_core.pipeline.social_auth.associate_user",
-    "social_core.pipeline.social_auth.load_extra_data",
+    # "social_core.pipeline.social_auth.associate_user",
+    # "social_core.pipeline.social_auth.load_extra_data",
     "social_core.pipeline.user.user_details",
 ]
 

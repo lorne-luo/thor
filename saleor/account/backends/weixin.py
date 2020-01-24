@@ -22,13 +22,13 @@ class CustomWeixinMixin(object):
     ]
 
     def get_user_details(self, response):
-        openid=response.get('openid', '')
+        openid = response.get('openid', '')
         return {
             'email': f'{openid}@{self.name}.auth',
             'first_name': response.get('nickname', ''),
-            # 'last_name': response.get('nickname', ''),
-            'profile_image_url': response.get('headimgurl', ''),
-            'unionid': response.get('unionid', '')
+            'last_name': response.get('headimgurl', ''),
+            'private_meta': response,
+            'meta': self.name
         }
 
 
