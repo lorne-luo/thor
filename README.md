@@ -1,4 +1,9 @@
 
+# How to test
+```
+py.test saleor/weixin/tests/test_weixin.py
+
+```
 
 Compile language
 ------------

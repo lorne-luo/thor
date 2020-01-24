@@ -1,5 +1,40 @@
+import hashlib
+import logging
+import os
 import time
 import xml.etree.cElementTree as ET
+
+from django.conf import settings
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from social_core.pipeline.user import user_details
+
+logger = logging.getLogger(__name__)
+
+
+# unused code
+
+def CheckSign(requests):
+    os.getpid()
+    form = {}
+    form['signature'] = requests.GET.get('signature', None)
+    form['timestamp'] = requests.GET.get('timestamp', None)
+    form['nonce'] = requests.GET.get('nonce', None)
+    form['token'] = settings.WEIXIN_APP_TOKEN
+    Signature = form.pop('signature')
+    Key = hashlib.sha1("".join(sorted([form[i] for i in form])).encode('utf-8')).hexdigest()  # 获得sha1加密后结果
+    return True if Signature == Key else False
+
+
+def custom_user_details(strategy, details, user=None, *args, **kwargs):
+    """Update user details using data from provider."""
+
+    logger.warning('details', details)
+    logger.warning('user', user)
+    logger.warning('args', args)
+    logger.warning('kwargs', kwargs)
+
+    return user_details(strategy, details, user=None, *args, **kwargs),
 
 
 # 预留处理接口
@@ -67,3 +102,20 @@ def autorely(requests):
     else:
         return CreateXML(ToUserName=requests.GET['openid'], FromUserName=ToUserName, CreateTime=int(time.time()),
                          MsgType='text', Content='不支持该数据类型')
+
+
+
+@csrf_exempt
+def check_signature(request):
+    if request.method == 'GET':
+        echostr = request.GET.get('echostr')
+
+        if CheckSign(request):
+            return HttpResponse(echostr)  # 必须返回echostr
+        else:
+            return HttpResponse('vaild signature')  # 可根据实际需要返回
+    elif request.method == "POST":
+        if not CheckSign(request):
+            HttpResponse('vaild signature')
+        Res = autorely(request).encode('utf-8')
+        return HttpResponse(Res, content_type="text/xml")
