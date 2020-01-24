@@ -1,26 +1,6 @@
 import time
 import xml.etree.cElementTree as ET
 
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-
-from saleor.weixin.auth import CheckSign
-
-
-@csrf_exempt
-def checkwx(request):
-    if request.method == "GET":
-        EchoStr = request.GET.get('echostr', None)  # 获取回应字符串
-        return HttpResponse(EchoStr) if CheckSign(request) else HttpResponse('vaild signature')
-    elif request.method == "POST":
-        if CheckSign(request) == False:
-            print('check not pass')
-            return None
-        Res = autorely(request).encode('utf-8')
-        return HttpResponse(Res, content_type="text/xml")
-    else:
-        return HttpResponse('invaild requests')
-
 
 # 预留处理接口
 # 推荐直接返回XML

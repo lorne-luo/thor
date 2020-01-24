@@ -129,4 +129,4 @@ webencodings==0.5.1
 zipp==0.6.0
 django-environ==0.4.5
 django-extensions==2.2.1
-weixin-python==0.5.7
+git+https://github.com/lorne-luo/weixin-python3.git
