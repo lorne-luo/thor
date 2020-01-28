@@ -103,11 +103,11 @@ class CustomerForm(forms.ModelForm):
         fields = ["first_name", "email", "note", "is_active"] # remove "last_name" for China
         labels = {
             "first_name": pgettext_lazy(
-                "Customer form: Given name field", "Given name"
+                "Customer form: Real name field", "Real name"
             ),
-            "last_name": pgettext_lazy(
-                "Customer form: Family name field", "Family name"
-            ),
+            # "last_name": pgettext_lazy(
+            #     "Customer form: Family name field", "Family name"
+            # ),
             "email": pgettext_lazy("Customer form: email address field", "Email"),
             "note": pgettext_lazy("Customer form: customer note field", "Notes"),
             "is_active": pgettext_lazy(

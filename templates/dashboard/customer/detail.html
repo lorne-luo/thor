@@ -31,7 +31,7 @@
       </a>
     </li>
     <li>
-      <span class="breadcrumbs--elipsed-item">{{ customer.first_name }}</span>
+      <span class="breadcrumbs--elipsed-item">{{ customer.full_name }}</span>
     </li>
   </ul>
 {% endblock %}
@@ -42,13 +42,11 @@
       <div class="card">
         <div class="card-content">
           <span class="card-title">
-            {{ customer.get_full_name }}
+            {{ customer.full_name }}
           </span>
-          {% if customer.get_full_name != customer.email %}
             <p>
               {{ customer.email }}
             </p>
-          {% endif %}
           <div class="row">
             {% if customer.date_joined %}
               <div class="col s12 m4 l12">

@@ -52,11 +52,7 @@
                   <tr data-action-go="{% url "dashboard:customer-details" pk=customer.pk %}">
                     {% with customer.default_billing_address as default_address %}
                       <td>
-                        {% if customer.get_full_name != customer.email %}
-                          {{ customer.get_full_name }}
-                        {% else %}
-                          -
-                        {% endif %}
+                          {{ customer.full_name }}
                       </td>
                       <td>
                         {{ customer.email }}
