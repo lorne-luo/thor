@@ -22,7 +22,6 @@ from oauthlib.common import generate_token
 from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
 from versatileimagefield.fields import VersatileImageField
 
-from saleor.core.constants import SEX_CHOICES
 from saleor.site import AuthenticationBackends
 from . import CustomerEvents
 from .validators import validate_possible_number
@@ -176,8 +175,8 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
     email = models.EmailField(pgettext_lazy(
         "Email", "Email"
     ), unique=True)
-    first_name = models.CharField(max_length=256, blank=False)
-    last_name = models.CharField(max_length=256, blank=True)
+    first_name = models.CharField(max_length=256, blank=False)  # real name
+    last_name = models.CharField(max_length=256, blank=True)  # weixin nick name
     addresses = models.ManyToManyField(
         Address, blank=True, related_name="user_addresses"
     )
@@ -201,8 +200,7 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
     province = models.CharField(max_length=256, blank=True)
     country = models.CharField(max_length=256, blank=True)
     language = models.CharField(max_length=256, blank=True)
-    sex = models.CharField(verbose_name="sex", max_length=32, blank=True, null=True, choices=SEX_CHOICES,
-                           default=0)
+    sex = models.CharField(verbose_name="sex", max_length=32, blank=True, null=True)
 
     USERNAME_FIELD = "email"
 
@@ -223,13 +221,22 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
 
     @property
     def full_name(self):
-        return self.first_name or self.last_name
+        if self.first_name == self.last_name:
+            return self.first_name
+        if self.first_name and self.last_name:
+            return f'{self.first_name} / {self.last_name}'
+        return self.last_name or self.first_name
+
+    @property
+    def real_name(self):
+        return self.first_name
+
+    @property
+    def nickname(self):
+        return self.last_name
 
     def get_full_name(self):
         return self.full_name
-
-    def get_short_name(self):
-        return self.email
 
     def get_ajax_label(self):
         address = self.default_billing_address
@@ -259,6 +266,10 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
 
     @cached_property
     def access_token(self):
+        access_token = self.private_meta.get('access_token')
+        if access_token:
+            return access_token
+
         if self.social_user:
             if self.auth_source == AuthenticationBackends.WEIXINMP:
                 return self.social_user.extra_data.get('access_token')

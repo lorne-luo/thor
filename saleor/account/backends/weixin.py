@@ -5,6 +5,7 @@ from requests import HTTPError
 from social_core.backends.weixin import WeixinOAuth2, WeixinOAuth2APP
 from social_core.exceptions import AuthCanceled, AuthUnknownError
 
+from saleor.core.constants import SEX_MAPPING
 from . import BaseBackend
 from ...site import AuthenticationBackends
 
@@ -23,6 +24,7 @@ class CustomWeixinMixin(object):
 
     def get_user_details(self, response):
         openid = response.get('openid', '')
+        sex = response.get('sex', '')
         return {
             'email': f'{openid}@{self.name}.auth',
             'first_name': response.get('nickname', ''),
@@ -32,7 +34,7 @@ class CustomWeixinMixin(object):
             'city': response.get('city', ''),
             'province': response.get('province', ''),
             'country': response.get('country', ''),
-            'sex': str(response.get('sex', '')),
+            'sex': SEX_MAPPING.get(sex, '未知'),
             'language': response.get('language', ''),
             'openid': openid,
         }

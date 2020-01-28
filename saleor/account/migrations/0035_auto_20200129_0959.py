@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='sex',
-            field=models.CharField(blank=True, choices=[('男', 1), ('女', 2), ('未知', 0)], default=0, max_length=32, null=True, verbose_name='sex'),
+            field=models.CharField(blank=True, max_length=32, null=True, verbose_name='sex'),
         ),
         migrations.AlterField(
             model_name='address',
