@@ -8,26 +8,24 @@ from django.template.context_processors import csrf
 from django.template.response import TemplateResponse
 from django.utils.translation import pgettext_lazy
 
+from .filters import UserFilter
+from .forms import CustomerDeleteForm, CustomerForm, CustomerNoteForm
+from ..emails import send_set_password_email
+from ..views import staff_member_required
 from ...account import events as account_events
 from ...account.models import CustomerNote, User
 from ...core.utils import get_paginator_items
-from ..emails import send_set_password_email
-from ..views import staff_member_required
-from .filters import UserFilter
-from .forms import CustomerDeleteForm, CustomerForm, CustomerNoteForm
 
 
 @staff_member_required
 @permission_required("account.manage_users")
 def customer_list(request):
     customers = (
-        User.objects.filter(
-            Q(is_staff=False) | (Q(is_staff=True) & Q(orders__isnull=False))
-        )
-        .distinct()
-        .prefetch_related("orders", "addresses")
-        .select_related("default_billing_address", "default_shipping_address")
-        .order_by("email")
+        User.objects.exclude(is_staff=True, is_superuser=True)
+            .distinct()
+            .prefetch_related("orders")
+            .select_related("default_billing_address", "default_shipping_address")
+            .order_by("email")
     )
     customer_filter = UserFilter(request.GET, queryset=customers)
     customers = get_paginator_items(
