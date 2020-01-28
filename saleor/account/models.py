@@ -196,6 +196,7 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
         "Phone number", "Phone number"
     ), blank=True, default="")
     # weixin profile
+    openid = models.CharField(max_length=256, blank=True)
     city = models.CharField(max_length=256, blank=True)
     province = models.CharField(max_length=256, blank=True)
     country = models.CharField(max_length=256, blank=True)
@@ -249,13 +250,6 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
     @cached_property
     def social_user(self):
         return self.social_auth.first()
-
-    @cached_property
-    def avatar_url(self):
-        if self.auth_source == AuthenticationBackends.WEIXINMP:
-            return self.social_user.extra_data.get('headimgurl')
-        if self.avatar:
-            return self.avatar.url
 
     @cached_property
     def auth_source(self):

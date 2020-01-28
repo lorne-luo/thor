@@ -32,9 +32,9 @@ class CustomWeixinMixin(object):
             'city': response.get('city', ''),
             'province': response.get('province', ''),
             'country': response.get('country', ''),
-            'sex': response.get('sex', ''),
+            'sex': str(response.get('sex', '')),
             'language': response.get('language', ''),
-
+            'openid': openid,
         }
 
 
