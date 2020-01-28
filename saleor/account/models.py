@@ -9,6 +9,8 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.contrib.postgres.fields import JSONField
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from django.db import models
 from django.db.models import Q, Value
 from django.forms.models import model_to_dict
@@ -20,6 +22,7 @@ from oauthlib.common import generate_token
 from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
 from versatileimagefield.fields import VersatileImageField
 
+from saleor.core.constants import SEX_CHOICES
 from saleor.site import AuthenticationBackends
 from . import CustomerEvents
 from .validators import validate_possible_number
@@ -188,10 +191,17 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
     default_billing_address = models.ForeignKey(
         Address, related_name="+", null=True, blank=True, on_delete=models.SET_NULL
     )
-    avatar = VersatileImageField(upload_to="user-avatars", blank=True, null=True)
+    avatar = VersatileImageField(upload_to="user-avatars", blank=True, null=True, max_length=512)
     phone = PossiblePhoneNumberField(pgettext_lazy(
         "Phone number", "Phone number"
     ), blank=True, default="")
+    # weixin profile
+    city = models.CharField(max_length=256, blank=True)
+    province = models.CharField(max_length=256, blank=True)
+    country = models.CharField(max_length=256, blank=True)
+    language = models.CharField(max_length=256, blank=True)
+    sex = models.CharField(verbose_name="sex", max_length=32, blank=True, null=True, choices=SEX_CHOICES,
+                           default=0)
 
     USERNAME_FIELD = "email"
 
@@ -225,6 +235,16 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
         if address:
             return "%s %s (%s)" % (address.first_name, address.last_name, self.email)
         return self.email
+
+    @property
+    def avatar_url(self):
+        val = URLValidator()
+        try:
+            url = str(self.avatar)
+            val(url)
+            return url
+        except ValidationError:
+            return self.avatar.url if self.avatar else None
 
     @cached_property
     def social_user(self):
