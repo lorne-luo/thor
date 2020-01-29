@@ -111,6 +111,8 @@ ORDER_FROM_EMAIL = env.str("ORDER_FROM_EMAIL", DEFAULT_FROM_EMAIL)
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, "media")
 MEDIA_URL = env.str("MEDIA_URL", "/media/")
 
+ID_PHOTO_FOLDER = 'id'
+
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "static")
 STATIC_URL = env.str("STATIC_URL", "/static/")
 STATICFILES_DIRS = [

@@ -1,4 +1,6 @@
 import logging
+import os
+import time
 from typing import Set
 
 from django.conf import settings
@@ -10,7 +12,7 @@ from django.contrib.auth.models import (
 )
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
-from django.core.validators import URLValidator
+from django.core.validators import URLValidator, FileExtensionValidator
 from django.db import models
 from django.db.models import Q, Value
 from django.forms.models import model_to_dict
@@ -20,10 +22,13 @@ from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django_countries.fields import Country, CountryField
 from oauthlib.common import generate_token
 from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
+from stdimage import StdImageField
 from versatileimagefield.fields import VersatileImageField
 
+from saleor.core.django.storage import OverwriteStorage
 from saleor.site import AuthenticationBackends
 from . import CustomerEvents
+from .tasks import guetzli_compress_image
 from .validators import validate_possible_number
 from ..core.models import ModelWithMetadata
 from ..core.utils.json_serializer import CustomJsonEncoder
@@ -57,6 +62,26 @@ class AddressQueryset(models.QuerySet):
         )
 
 
+def get_id_photo_front_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = '%s_%s_front.%s' % (instance.customer.pk, int(time.time()), ext)
+    file_path = os.path.join(settings.ID_PHOTO_FOLDER, filename)
+
+    full_path = os.path.join(settings.MEDIA_ROOT, file_path)
+    guetzli_compress_image.apply_async(args=[full_path], countdown=10)
+    return file_path
+
+
+def get_id_photo_back_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = '%s_%s_back.%s' % (instance.customer.pk, int(time.time()), ext)
+    file_path = os.path.join(settings.ID_PHOTO_FOLDER, filename)
+
+    full_path = os.path.join(settings.MEDIA_ROOT, file_path)
+    guetzli_compress_image.apply_async(args=[full_path], countdown=230)
+    return file_path
+
+
 class Address(models.Model):
     first_name = models.CharField(pgettext_lazy(
         "Customer form: Given name field", "Given name"
@@ -83,6 +108,19 @@ class Address(models.Model):
     phone = PossiblePhoneNumberField(pgettext_lazy(
         "Phone number", "Phone number"
     ), blank=True, default="")
+    id_number = models.CharField(_('ID number'), max_length=20, blank=True, null=True)
+    id_photo_front = StdImageField(_('ID Front'), upload_to=get_id_photo_front_path, blank=True, null=True,
+                                   validators=[FileExtensionValidator(['jpg', 'jpeg', 'gif', 'png'])],
+                                   storage=OverwriteStorage(),
+                                   variations={
+                                       'thumbnail': (200, 200, False)
+                                   })
+    id_photo_back = StdImageField(_('ID Back'), upload_to=get_id_photo_back_path, blank=True, null=True,
+                                  validators=[FileExtensionValidator(['jpg', 'jpeg', 'gif', 'png'])],
+                                  storage=OverwriteStorage(),
+                                  variations={
+                                      'thumbnail': (200, 200, False)
+                                  })
 
     objects = AddressQueryset.as_manager()
 
