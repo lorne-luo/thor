@@ -28,9 +28,9 @@ class CustomWeixinMixin(object):
         return {
             'email': f'{openid}@{self.name}.auth',
             'first_name': response.get('nickname', ''),
+            'last_name': response.get('nickname', ''),
             'avatar': response.get('headimgurl', ''),
             'private_meta': response,
-            'meta': {'source': self.name},
             'city': response.get('city', ''),
             'province': response.get('province', ''),
             'country': response.get('country', ''),
