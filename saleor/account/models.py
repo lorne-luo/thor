@@ -191,10 +191,10 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
         Address, related_name="+", null=True, blank=True, on_delete=models.SET_NULL
     )
     avatar = VersatileImageField(upload_to="user-avatars", blank=True, null=True, max_length=512)
-    phone = PossiblePhoneNumberField(pgettext_lazy(
-        "Phone number", "Phone number"
-    ), blank=True, default="")
     # weixin profile
+    phone = models.CharField(pgettext_lazy(
+        "Phone number", "Phone number"
+    ), blank=True, default="", max_length=256)
     openid = models.CharField(max_length=256, blank=True)
     city = models.CharField(max_length=256, blank=True)
     province = models.CharField(max_length=256, blank=True)

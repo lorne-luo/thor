@@ -100,7 +100,7 @@ class CustomerForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["first_name", "email", "note", "is_active"] # remove "last_name" for China
+        fields = ["first_name", "phone", "note", "is_active"] # remove "last_name" for China
         labels = {
             "first_name": pgettext_lazy(
                 "Customer form: Real name field", "Real name"
@@ -108,7 +108,8 @@ class CustomerForm(forms.ModelForm):
             # "last_name": pgettext_lazy(
             #     "Customer form: Family name field", "Family name"
             # ),
-            "email": pgettext_lazy("Customer form: email address field", "Email"),
+            "phone": pgettext_lazy("Customer form: phone field", "Phone"),
+            # "email": pgettext_lazy("Customer form: email address field", "Email"),
             "note": pgettext_lazy("Customer form: customer note field", "Notes"),
             "is_active": pgettext_lazy(
                 "Customer form: is active toggle", "User is active"
