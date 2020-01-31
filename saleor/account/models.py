@@ -101,13 +101,13 @@ class Address(models.Model):
     postal_code = models.CharField(max_length=20, blank=True)
     country = CountryField(pgettext_lazy(
         "Address field", "County"
-    ))
+    ), blank=True)
     country_area = models.CharField(pgettext_lazy(
         "Address field", "Province"
     ), max_length=128, blank=True)
-    phone = PossiblePhoneNumberField(pgettext_lazy(
+    phone = models.CharField(pgettext_lazy(
         "Phone number", "Phone number"
-    ), blank=True, default="")
+    ), blank=True, default="", max_length=32)
     id_number = models.CharField(_('ID number'), max_length=20, blank=True, null=True)
     id_photo_front = StdImageField(_('ID Front'), upload_to=get_id_photo_front_path, blank=True, null=True,
                                    validators=[FileExtensionValidator(['jpg', 'jpeg', 'gif', 'png'])],
