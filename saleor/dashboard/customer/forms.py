@@ -1,8 +1,11 @@
 from django import forms
+from django.forms import modelformset_factory, ALL_FIELDS
 from django.utils.translation import pgettext_lazy
+from django.utils.translation import ugettext_lazy as _
 
+from saleor.core.django.widgets import IDThumbnailImageInput
 from ...account import events as account_events
-from ...account.models import CustomerNote, User
+from ...account.models import CustomerNote, User, Address
 from ...extensions.manager import get_extensions_manager
 
 
@@ -83,7 +86,7 @@ class CustomerForm(forms.ModelForm):
 
         has_new_email = "email" in self.changed_data
         has_new_name = (
-            "first_name" in self.changed_data or "last_name" in self.changed_data
+                "first_name" in self.changed_data or "last_name" in self.changed_data
         )
 
         # Generate the events
@@ -100,7 +103,7 @@ class CustomerForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["first_name", "phone", "note", "is_active"] # remove "last_name" for China
+        fields = ["first_name", "phone", "note", "is_active"]  # remove "last_name" for China
         labels = {
             "first_name": pgettext_lazy(
                 "Customer form: Real name field", "Real name"
@@ -136,3 +139,24 @@ class CustomerNoteForm(forms.ModelForm):
             account_events.staff_user_added_note_to_a_customer_event(
                 staff_user=self.instance.customer, note=self.instance.content
             )
+
+
+class AddressInlineForm(forms.ModelForm):
+    id_photo_front = forms.ImageField(label=_("ID photo front"), required=False,
+                                      widget=IDThumbnailImageInput({'width': '100%', 'size': 'thumbnail'}))
+    id_photo_back = forms.ImageField(label=_("ID photo back"), required=False,
+                                     widget=IDThumbnailImageInput({'width': '100%', 'size': 'thumbnail'}))
+
+    class Meta:
+        model = Address
+        fields = ALL_FIELDS
+        # exclude=['id']
+
+    def __init__(self, *args, **kwargs):
+        super(AddressInlineForm, self).__init__(*args, **kwargs)
+        # for field_name in self.fields:
+        #     field = self.fields.get(field_name)
+        #     field.widget.attrs['class'] = 'form-control'
+
+
+AddressFormSet = modelformset_factory(Address, form=AddressInlineForm, can_order=False, can_delete=False, extra=1)

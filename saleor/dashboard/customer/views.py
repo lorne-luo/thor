@@ -9,7 +9,7 @@ from django.template.response import TemplateResponse
 from django.utils.translation import pgettext_lazy
 
 from .filters import UserFilter
-from .forms import CustomerDeleteForm, CustomerForm, CustomerNoteForm
+from .forms import CustomerDeleteForm, CustomerForm, CustomerNoteForm, AddressFormSet
 from ..emails import send_set_password_email
 from ..views import staff_member_required
 from ...account import events as account_events
@@ -23,7 +23,7 @@ def customer_list(request):
     customers = (
         User.objects.exclude(is_staff=True, is_superuser=True)
             .distinct()
-            .prefetch_related("orders")
+            .prefetch_related("orders", "addresses")
             .select_related("default_billing_address", "default_shipping_address")
             .order_by("email")
     )
@@ -72,13 +72,41 @@ def customer_create(request):
 def customer_edit(request, pk=None):
     customer = get_object_or_404(User, pk=pk)
     form = CustomerForm(request.POST or None, instance=customer, user=request.user)
-    if form.is_valid():
+    address_formset = AddressFormSet(request.POST or None,
+                                     request.FILES or None,
+                                     queryset=customer.addresses.all(),
+                                     prefix='address_set')
+
+    if request.method == 'POST' and form.is_valid():
         form.save()
-        msg = pgettext_lazy("Dashboard message", "Updated customer %s") % customer
-        messages.success(request, msg)
+        msg = pgettext_lazy("Dashboard message", "Updated customer %s") % customer.first_name
+
+        if address_formset.is_valid():
+            addresses = address_formset.save()
+            customer.addresses.add(*addresses)
+            messages.success(request, msg)
+        else:
+            messages.error(request, str(address_formset.errors))
+
         return redirect("dashboard:customer-details", pk=customer.pk)
-    ctx = {"form": form, "customer": customer}
+    ctx = {"form": form,
+           "customer": customer,
+           "address_forms": address_formset,
+           }
     return TemplateResponse(request, "dashboard/customer/form.html", ctx)
+
+
+"""
+productanalysis_formset = ProductAnalysisFormSet(self.request.POST, self.request.FILES,
++                                                        prefix='productanalysis_formset', instance=self.object)
++       productanalysis_formset.instance = self.object
+
++       if productanalysis_formset.is_valid():
++           productanalysis_formset.save()
++       else:
++           messages.error(self.request, str(productanalysis_formset.errors))
++           return super(ProductAddView, self).form_invalid(form)
+"""
 
 
 @staff_member_required
