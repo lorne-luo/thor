@@ -1,0 +1,12 @@
+.image-preview {
+  text-align: center;
+  white-space: nowrap;
+  .thumbnail-helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+  img.thumbnail-image {
+    vertical-align: middle;
+  }
+}

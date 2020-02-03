@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import modelformset_factory, ALL_FIELDS
+from django.forms import modelformset_factory
 from django.utils.translation import pgettext_lazy
 from django.utils.translation import ugettext_lazy as _
 
@@ -143,13 +143,16 @@ class CustomerNoteForm(forms.ModelForm):
 
 class AddressInlineForm(forms.ModelForm):
     id_photo_front = forms.ImageField(label=_("ID photo front"), required=False,
-                                      widget=IDThumbnailImageInput({'width': '100%', 'size': 'thumbnail'}))
+                                      widget=IDThumbnailImageInput(
+                                          {'width': '100%', 'height': '200px', 'size': 'thumbnail'}))
     id_photo_back = forms.ImageField(label=_("ID photo back"), required=False,
-                                     widget=IDThumbnailImageInput({'width': '100%', 'size': 'thumbnail'}))
+                                     widget=IDThumbnailImageInput(
+                                         {'width': '100%', 'height': '200px', 'size': 'thumbnail'}))
 
     class Meta:
         model = Address
-        fields = ALL_FIELDS
+        fields = ('first_name', 'phone', 'street_address_1', 'id_number',
+                  'id_photo_front', 'id_photo_back')
         # exclude=['id']
 
     def __init__(self, *args, **kwargs):

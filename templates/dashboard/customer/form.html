@@ -42,7 +42,7 @@
   <div class="row">
     <div class="col s12 l8">
       {% if form %}
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
 
           <div class="card customer-basic">
             <div class="card-content">
@@ -89,40 +89,55 @@
                      id="{{ address_forms.prefix }}-{{ forloop.counter0 }}"{% if address.instance.pk %}
                      data-pk="{{ address.instance.pk }}"{% endif %}>
                     {{ address.id }}
-                  <div class="visible-xs visible-sm col-xs-2 ln34">姓名</div>
-                  <div class="col-lg-1 col-md-1 col-xs-3">
-                    {{ address.first_name }}
+
+                  <div class="row">
+                    {{ address.first_name|materializecss }}
+                    {{ address.phone|materializecss }}
+                    {{ address.street_address_1|materializecss }}
+                    {{ address.id_number|materializecss }}
+                    <div class="input input-field col s6">
+                      {{ address.id_photo_front.label_tag }}
+                      {{ address.id_photo_front }}
+                    </div>
+                    <div class="input input-field col s6">
+                      {{ address.id_photo_back.label_tag }}
+                      {{ address.id_photo_back }}
+                    </div>
                   </div>
-                  <div class="visible-xs visible-sm col-xs-2 ln34">手机</div>
-                  <div class="col-lg-1 col-md-1 col-xs-5">
-                    {{ address.phone }}
-                  </div>
-                  <div class="visible-xs visible-sm col-xs-2 ln34">地址</div>
-                  <div class="col-lg-3 col-md-3 col-xs-10">
-                    {{ address.street_address_1 }}
-                  </div>
-                  <div class="visible-xs visible-sm col-xs-2 ln34">身份证</div>
-                  <div class="col-lg-2 col-md-2 col-xs-10">
-                    {{ address.id_number }}
-                  </div>
-                  <div class="visible-xs visible-sm col-xs-2 ln34">正面</div>
-                  <div class="col-lg-2 col-md-2 col-xs-10">
-                    {{ address.id_photo_front }}
-                  </div>
-                  <div class="visible-xs visible-sm col-xs-2 ln34">
-                    反面
-                    <a href="javascript:void(0)" class="ln34 delete_express" v-on:click="delete_address">
-                      <i style="color:#dd4b39;" class="fa fa-lg fa-times-circle"></i>
-                    </a>
-                  </div>
-                  <div class="col-lg-2 col-md-2 col-xs-10">
-                    {{ address.id_photo_back }}
-                  </div>
-                  <div class="col-lg-1 col-md-1">
-                    <a href="javascript:void(0)" class="ln34 delete_express" v-on:click="delete_address">
-                      X
-                    </a>
-                  </div>
+{#                  <div class="input input-field col s12">#}
+{#                    {{ address.first_name.label }}#}
+{#                    {{ address.first_name }}#}
+{#                    </div>#}
+{#                  <div class="col-xs-2 ln34">手机</div>#}
+{#                  <div class="col-lg-1 col-md-1 col-xs-5">#}
+{#                    {{ address.phone }}#}
+{#                  </div>#}
+{#                  <div class="col-xs-2 ln34">地址</div>#}
+{#                  <div class="col-lg-3 col-md-3 col-xs-10">#}
+{#                    {{ address.street_address_1 }}#}
+{#                  </div>#}
+{#                  <div class="col-xs-2 ln34">身份证</div>#}
+{#                  <div class="col-lg-2 col-md-2 col-xs-10">#}
+{#                    {{ address.id_number }}#}
+{#                  </div>#}
+{#                  <div class="col-xs-2 ln34">正面</div>#}
+{#                  <div class="col-lg-2 col-md-2 col-xs-10">#}
+{#                    {{ address.id_photo_front }}#}
+{#                  </div>#}
+{#                  <div class="col-xs-2 ln34">#}
+{#                    反面#}
+{#                    <a href="javascript:void(0)" class="ln34 delete_express" v-on:click="delete_address">#}
+{#                      <i style="color:#dd4b39;" class="fa fa-lg fa-times-circle"></i>#}
+{#                    </a>#}
+{#                  </div>#}
+{#                  <div class="col-lg-2 col-md-2 col-xs-10">#}
+{#                    {{ address.id_photo_back }}#}
+{#                  </div>#}
+{#                  <div class="col-lg-1 col-md-1">#}
+{#                    <a href="javascript:void(0)" class="ln34 delete_express" v-on:click="delete_address">#}
+{#                      X#}
+{#                    </a>#}
+{#                  </div>#}
                 </div>
               {% endfor %}
               <div class="box-footer">
