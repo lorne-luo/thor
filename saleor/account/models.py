@@ -1,7 +1,7 @@
 import logging
 import os
-import time
 from typing import Set
+from uuid import uuid1
 
 from django.conf import settings
 from django.contrib.auth.models import (
@@ -22,9 +22,11 @@ from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django_countries.fields import Country, CountryField
 from oauthlib.common import generate_token
 from phonenumber_field.modelfields import PhoneNumber, PhoneNumberField
+from pypinyin import Style
 from stdimage import StdImageField
 from versatileimagefield.fields import VersatileImageField
 
+from saleor.core.django.models import PinYinFieldModelMixin, ResizeUploadedImageModelMixin
 from saleor.core.django.storage import OverwriteStorage
 from saleor.site import AuthenticationBackends
 from . import CustomerEvents
@@ -64,7 +66,7 @@ class AddressQueryset(models.QuerySet):
 
 def get_id_photo_front_path(instance, filename):
     ext = filename.split('.')[-1]
-    filename = '%s_%s_front.%s' % (instance.customer.pk, int(time.time()), ext)
+    filename = f'{instance.id_number or uuid1().hex}_front.{ext}'
     file_path = os.path.join(settings.ID_PHOTO_FOLDER, filename)
 
     full_path = os.path.join(settings.MEDIA_ROOT, file_path)
@@ -74,7 +76,7 @@ def get_id_photo_front_path(instance, filename):
 
 def get_id_photo_back_path(instance, filename):
     ext = filename.split('.')[-1]
-    filename = '%s_%s_back.%s' % (instance.customer.pk, int(time.time()), ext)
+    filename = f'{instance.id_number or uuid1().hex}_back.{ext}'
     file_path = os.path.join(settings.ID_PHOTO_FOLDER, filename)
 
     full_path = os.path.join(settings.MEDIA_ROOT, file_path)
@@ -82,7 +84,7 @@ def get_id_photo_back_path(instance, filename):
     return file_path
 
 
-class Address(models.Model):
+class Address(PinYinFieldModelMixin, ResizeUploadedImageModelMixin, models.Model):
     first_name = models.CharField(pgettext_lazy(
         "Customer form: Given name field", "Given name"
     ), max_length=256, blank=True)
@@ -113,19 +115,31 @@ class Address(models.Model):
                                    validators=[FileExtensionValidator(['jpg', 'jpeg', 'gif', 'png'])],
                                    storage=OverwriteStorage(),
                                    variations={
-                                       'thumbnail': (200, 200, False)
+                                       'thumbnail': (300, 200, False)
                                    })
     id_photo_back = StdImageField(_('ID Back'), upload_to=get_id_photo_back_path, blank=True, null=True,
                                   validators=[FileExtensionValidator(['jpg', 'jpeg', 'gif', 'png'])],
                                   storage=OverwriteStorage(),
                                   variations={
-                                      'thumbnail': (200, 200, False)
+                                      'thumbnail': (300, 200, False)
                                   })
+    pinyin = models.TextField(_('pinyin'), max_length=1024, blank=True)
+
+    pinyin_fields_conf = [
+        ('name', Style.NORMAL, False),
+        ('name', Style.FIRST_LETTER, False),
+        ('address', Style.NORMAL, False),
+        ('address', Style.FIRST_LETTER, False),
+    ]
 
     objects = AddressQueryset.as_manager()
 
     class Meta:
         ordering = ("pk",)
+
+    def __init__(self, *args, **kwargs):
+        super(PinYinFieldModelMixin, self).__init__(*args, **kwargs)
+        self._state.id_number = self.id_number
 
     @property
     def province(self):
@@ -137,12 +151,14 @@ class Address(models.Model):
 
     @property
     def full_name(self):
-        return "%s %s" % (self.first_name, self.last_name)
+        return self.first_name
+
+    @property
+    def name(self):
+        return self.first_name
 
     def __str__(self):
-        if self.company_name:
-            return "%s - %s" % (self.company_name, self.full_name)
-        return self.full_name
+        return f'{self.first_name}, {self.phone}, {self.street_address_1}'
 
     def __eq__(self, other):
         if not isinstance(other, Address):
@@ -166,6 +182,30 @@ class Address(models.Model):
     def get_copy(self):
         """Return a new instance of the same address."""
         return Address.objects.create(**self.as_data())
+
+    def save(self, *args, **kwargs):
+        # resize images when first uploaded
+        self.resize_image('id_photo_front')
+        self.resize_image('id_photo_back')
+        if self.id_number and 'x' in self.id_number:
+            self.id_number = self.id_number.upper()
+
+        self._link_id_photo()
+        super(Address, self).save(*args, **kwargs)
+
+    def _link_id_photo(self):
+        """
+        reuse id photo if already uploaded
+        """
+        if self._state.id_number != self.id_number and self.id_number:
+            if not self.id_photo_front:
+                existed = Address.objects.filter(id_number=self.id_number, id_photo_front__isnull=False).first()
+                if existed:
+                    self.id_photo_front = existed.id_photo_front
+            if not self.id_photo_back:
+                existed = Address.objects.filter(id_number=self.id_number, id_photo_back__isnull=False).first()
+                if existed:
+                    self.id_photo_back = existed.id_photo_back
 
 
 class UserManager(BaseUserManager):
