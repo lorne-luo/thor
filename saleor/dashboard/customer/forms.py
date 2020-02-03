@@ -152,7 +152,7 @@ class AddressInlineForm(forms.ModelForm):
     class Meta:
         model = Address
         fields = ('first_name', 'phone', 'street_address_1', 'id_number',
-                  'id_photo_front', 'id_photo_back')
+                  'id_photo_front', 'id_photo_back', 'pinyin')
         # exclude=['id']
 
     def __init__(self, *args, **kwargs):

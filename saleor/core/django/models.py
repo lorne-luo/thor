@@ -29,13 +29,11 @@ class PinYinFieldModelMixin(models.Model):
             setattr(self._state, field_name, init_value)
 
     def save(self, *args, **kwargs):
-        if self._check_update():
+        if self._check_changed():
             self._update_pinyin_fields()
         super(PinYinFieldModelMixin, self).save(*args, **kwargs)
 
-    def _check_update(self):
-        if not getattr(self, self.pinyin_field, None):
-            return True
+    def _check_changed(self):
         for field_name, style, heteronym in self.pinyin_fields_conf:
             current_value = self.get_attr_by_str(field_name)
             init_value = getattr(self._state, field_name)
@@ -48,7 +46,7 @@ class PinYinFieldModelMixin(models.Model):
         for field_name, style, heteronym in self.pinyin_fields_conf:
             current_value = self.get_attr_by_str(field_name)
             new_pinyin += self._get_pinyin(current_value, style, heteronym)
-            setattr(self, self.pinyin_field, new_pinyin.lower())
+        setattr(self, self.pinyin_field, new_pinyin.lower())
 
     @classmethod
     def _get_pinyin(cls, value, style=Style.NORMAL, heteronym=False):
