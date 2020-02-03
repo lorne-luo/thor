@@ -85,10 +85,10 @@
                      value="{{ address_forms|length }}">
 
               {% for address in address_forms %}
-                <div class="form-group {% if forloop.counter0|divisibleby:2 %}even{% else %}odd{% endif %}"
+                <div class="address-form form-group {% if forloop.counter0|divisibleby:2 %}even{% else %}odd{% endif %}"
                      id="{{ address_forms.prefix }}-{{ forloop.counter0 }}"{% if address.instance.pk %}
                      data-pk="{{ address.instance.pk }}"{% endif %}>
-                    {{ address.id }}
+                  {{ address.id }}
 
                   <div class="row">
                     {{ address.first_name|materializecss }}
@@ -104,40 +104,6 @@
                       {{ address.id_photo_back }}
                     </div>
                   </div>
-{#                  <div class="input input-field col s12">#}
-{#                    {{ address.first_name.label }}#}
-{#                    {{ address.first_name }}#}
-{#                    </div>#}
-{#                  <div class="col-xs-2 ln34">手机</div>#}
-{#                  <div class="col-lg-1 col-md-1 col-xs-5">#}
-{#                    {{ address.phone }}#}
-{#                  </div>#}
-{#                  <div class="col-xs-2 ln34">地址</div>#}
-{#                  <div class="col-lg-3 col-md-3 col-xs-10">#}
-{#                    {{ address.street_address_1 }}#}
-{#                  </div>#}
-{#                  <div class="col-xs-2 ln34">身份证</div>#}
-{#                  <div class="col-lg-2 col-md-2 col-xs-10">#}
-{#                    {{ address.id_number }}#}
-{#                  </div>#}
-{#                  <div class="col-xs-2 ln34">正面</div>#}
-{#                  <div class="col-lg-2 col-md-2 col-xs-10">#}
-{#                    {{ address.id_photo_front }}#}
-{#                  </div>#}
-{#                  <div class="col-xs-2 ln34">#}
-{#                    反面#}
-{#                    <a href="javascript:void(0)" class="ln34 delete_express" v-on:click="delete_address">#}
-{#                      <i style="color:#dd4b39;" class="fa fa-lg fa-times-circle"></i>#}
-{#                    </a>#}
-{#                  </div>#}
-{#                  <div class="col-lg-2 col-md-2 col-xs-10">#}
-{#                    {{ address.id_photo_back }}#}
-{#                  </div>#}
-{#                  <div class="col-lg-1 col-md-1">#}
-{#                    <a href="javascript:void(0)" class="ln34 delete_express" v-on:click="delete_address">#}
-{#                      X#}
-{#                    </a>#}
-{#                  </div>#}
                 </div>
               {% endfor %}
               <div class="box-footer">
@@ -156,4 +122,28 @@
     </div>
   </div>
 
+{% endblock %}
+
+{% block custom_css %}
+  {{ block.super }}
+  <script
+			  src="https://code.jquery.com/jquery-2.2.4.min.js"
+			  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+			  crossorigin="anonymous"></script>
+  <script type="text/javascript" src="http://s.luotao.net/static/js/jquery.formset.min.js"></script>
+{% endblock %}
+
+{% block custom_js %}
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('.address-form').formset({
+        {#formTemplate: '#{{ address_forms.prefix }}_template .form-group',#}
+        prefix: '{{ address_forms.prefix }}',
+        deleteText: '<button type="button" style="width:108px" class="btn btn-success">删除此项</button>',
+        deleteCssClass: 'delete-row inline ln34',
+        formCssClass: 'dynamic-form',
+        addText: '<button type="button" style="width:108px" class="btn btn-success">增加一项</button>',
+      });
+    });
+  </script>
 {% endblock %}

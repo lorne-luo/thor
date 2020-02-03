@@ -162,4 +162,4 @@ class AddressInlineForm(forms.ModelForm):
         #     field.widget.attrs['class'] = 'form-control'
 
 
-AddressFormSet = modelformset_factory(Address, form=AddressInlineForm, can_order=False, can_delete=False, extra=1)
+AddressFormSet = modelformset_factory(Address, form=AddressInlineForm, can_order=False, can_delete=True, extra=1)
