@@ -78,3 +78,33 @@
 .formset-table {
   @include formset-table;
 }
+
+.address-form:nth-child(even) .row {
+  background: #fff
+}
+
+.address-form:nth-child(odd) .row {
+  background: #fff
+}
+
+.address-form {
+  a.add-row {
+    display: inline-block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    .address-add-btn {
+      background-color: #398439;
+    }
+  }
+  .row {
+    padding-top: 30px;
+    margin-bottom: 0;
+    a.delete-row {
+      margin-left: 10px;
+      .address-delete-btn {
+        background-color: #d73925;
+        width: 98%;
+      }
+    }
+  }
+}

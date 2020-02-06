@@ -5,7 +5,7 @@
 
 {% block title %}
   {% if customer.pk %}
-    {{ customer }}
+    {{ customer.full_name }}
   {% else %}
     {% trans "Add new customer" context "Dashboard add customer" %}
   {% endif %}
@@ -33,7 +33,7 @@
         <svg data-src="{% static "dashboard/images/arrow_left.svg" %}" fill="#fff" width="20px" height="20px"/>
       </a>
     </li>
-    <li><span class="breadcrumbs--elipsed-item">{% if customer.pk %}{{ customer }}{% else %}
+    <li><span class="breadcrumbs--elipsed-item">{% if customer.pk %}{{ customer.full_name }}{% else %}
       {% trans 'Add customer' context 'Dashboard add customer action' %}{% endif %}</span></li>
   </ul>
 {% endblock %}
@@ -84,17 +84,17 @@
               <input id="address_forms_length" name="address_forms_length" type="hidden"
                      value="{{ address_forms|length }}">
 
-              {% for address in address_forms %}
-                <div class="address-form form-group {% if forloop.counter0|divisibleby:2 %}even{% else %}odd{% endif %}"
-                     id="{{ address_forms.prefix }}-{{ forloop.counter0 }}"{% if address.instance.pk %}
-                     data-pk="{{ address.instance.pk }}"{% endif %}>
-                  {{ address.id }}
+              <div class="address-form form-group">
+                {% for address in address_forms %}
 
-                  <div class="row">
-                    {{ address.first_name|materializecss }}
-                    {{ address.phone|materializecss }}
-                    {{ address.street_address_1|materializecss }}
-                    {{ address.id_number|materializecss }}
+                  <div class="row {% if forloop.counter0|divisibleby:2 %}even{% else %}odd{% endif %}"
+                       id="{{ address_forms.prefix }}-{{ forloop.counter0 }}"
+                    {% if address.instance.pk %} data-pk="{{ address.instance.pk }}"{% endif %}>
+                    {{ address.id }}
+                    {{ address.first_name|materializecss:"input-field s6" }}
+                    {{ address.phone|materializecss:"input-field s6" }}
+                    {{ address.street_address_1|materializecss:"input-field s6" }}
+                    {{ address.id_number|materializecss:"input-field s6" }}
                     <div class="input input-field col s6">
                       {{ address.id_photo_front.label_tag }}
                       {{ address.id_photo_front }}
@@ -104,17 +104,16 @@
                       {{ address.id_photo_back }}
                     </div>
                   </div>
-                </div>
-              {% endfor %}
-              <div class="box-footer">
-                <button type="button" style="width:108px" class="btn btn-success" v-on:click="add_address">Add Address
-                </button>
-                <button type="submit" style="width:108px" class="btn btn-primary" v-on:click="submit">Save & Back
-                </button>
-                <button type="submit" style="width:108px" class="btn btn-primary" v-on:click="submit" name="_continue">
-                  Save & Edit
-                </button>
+                {% endfor %}
               </div>
+
+              <div class="box-footer">
+                <button type="submit"class="btn btn-primary" v-on:click="submit">保存更改</button>
+{#                <button type="submit" class="btn btn-primary" v-on:click="submit" name="_continue">#}
+{#                  Save & Edit#}
+{#                </button>#}
+              </div>
+
             </div>
           </div>
         </form>
@@ -127,22 +126,23 @@
 {% block custom_css %}
   {{ block.super }}
   <script
-			  src="https://code.jquery.com/jquery-2.2.4.min.js"
-			  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-			  crossorigin="anonymous"></script>
+    src="https://code.jquery.com/jquery-2.2.4.min.js"
+    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous"></script>
   <script type="text/javascript" src="http://s.luotao.net/static/js/jquery.formset.min.js"></script>
 {% endblock %}
 
 {% block custom_js %}
   <script type="text/javascript">
     $(document).ready(function () {
-      $('.address-form').formset({
+      $('.address-form .row').formset({
         {#formTemplate: '#{{ address_forms.prefix }}_template .form-group',#}
         prefix: '{{ address_forms.prefix }}',
-        deleteText: '<button type="button" style="width:108px" class="btn btn-success">删除此项</button>',
-        deleteCssClass: 'delete-row inline ln34',
+        {#deleteText: '<i class="fas fa-window-close fa-2x"></i>',#}
+        deleteText: '<button type="button" class="btn btn-default address-delete-btn">删除此项</button>',
+        deleteCssClass: 'delete-row',
         formCssClass: 'dynamic-form',
-        addText: '<button type="button" style="width:108px" class="btn btn-success">增加一项</button>',
+        addText: '<button type="button" class="btn btn-default address-add-btn">增加一项</button>',
       });
     });
   </script>

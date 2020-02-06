@@ -74,7 +74,7 @@ def customer_edit(request, pk=None):
         customer = User.objects.defer('private_meta').get(id=pk)
     except User.DoesNotExist:
         raise Http404(f'No customer #{pk} matches the given query.')
-    
+
     form = CustomerForm(request.POST or None, instance=customer, user=request.user)
     # ordering, show default first
     address_queryset = customer.addresses.all().order_by('-user_addresses__default_shipping_address')
