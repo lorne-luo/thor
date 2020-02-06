@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.template.context_processors import csrf
 from django.template.response import TemplateResponse
@@ -70,11 +70,17 @@ def customer_create(request):
 @staff_member_required
 @permission_required("account.manage_users")
 def customer_edit(request, pk=None):
-    customer = get_object_or_404(User, pk=pk)
+    try:
+        customer = User.objects.defer('private_meta').get(id=pk)
+    except User.DoesNotExist:
+        raise Http404(f'No customer #{pk} matches the given query.')
+    
     form = CustomerForm(request.POST or None, instance=customer, user=request.user)
+    # ordering, show default first
+    address_queryset = customer.addresses.all().order_by('-user_addresses__default_shipping_address')
     address_formset = AddressFormSet(request.POST or None,
                                      request.FILES or None,
-                                     queryset=customer.addresses.all(),
+                                     queryset=address_queryset,
                                      prefix='address_set')
 
     if request.method == 'POST' and form.is_valid():
@@ -94,19 +100,6 @@ def customer_edit(request, pk=None):
            "address_forms": address_formset,
            }
     return TemplateResponse(request, "dashboard/customer/form.html", ctx)
-
-
-"""
-productanalysis_formset = ProductAnalysisFormSet(self.request.POST, self.request.FILES,
-+                                                        prefix='productanalysis_formset', instance=self.object)
-+       productanalysis_formset.instance = self.object
-
-+       if productanalysis_formset.is_valid():
-+           productanalysis_formset.save()
-+       else:
-+           messages.error(self.request, str(productanalysis_formset.errors))
-+           return super(ProductAddView, self).form_invalid(form)
-"""
 
 
 @staff_member_required
