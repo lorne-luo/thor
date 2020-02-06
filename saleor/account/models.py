@@ -126,10 +126,10 @@ class Address(PinYinFieldModelMixin, ResizeUploadedImageModelMixin, models.Model
     pinyin = models.TextField(_('pinyin'), max_length=1024, blank=True)
 
     pinyin_fields_conf = [
-        ('name', Style.NORMAL, False),
-        ('name', Style.FIRST_LETTER, False),
-        ('address', Style.NORMAL, False),
-        ('address', Style.FIRST_LETTER, False),
+        ('first_name', Style.NORMAL, False),
+        ('first_name', Style.FIRST_LETTER, False),
+        ('street_address_1', Style.NORMAL, False),
+        ('street_address_1', Style.FIRST_LETTER, False),
     ]
 
     objects = AddressQueryset.as_manager()
@@ -138,7 +138,7 @@ class Address(PinYinFieldModelMixin, ResizeUploadedImageModelMixin, models.Model
         ordering = ("pk",)
 
     def __init__(self, *args, **kwargs):
-        super(PinYinFieldModelMixin, self).__init__(*args, **kwargs)
+        super(Address, self).__init__(*args, **kwargs)
         self._state.id_number = self.id_number
 
     @property
@@ -296,6 +296,13 @@ class User(PermissionsMixin, ModelWithMetadata, AbstractBaseUser):
                 pgettext_lazy("Permission description", "Impersonate customers."),
             ),
         )
+
+    pinyin_fields_conf = [
+        ('first_name', Style.NORMAL, False),
+        ('first_name', Style.FIRST_LETTER, False),
+        ('note', Style.NORMAL, False),
+        ('note', Style.FIRST_LETTER, False),
+    ]
 
     @property
     def full_name(self):
