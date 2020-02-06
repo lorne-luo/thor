@@ -24,8 +24,9 @@
 
 {% block header_extra %}
   <div class="btn-fab-fixed">
-    <a href="{% url 'dashboard:shipping-zone-add' %}" class="btn-fab-default waves-effect waves-light" title="{% trans "Add shipping zone" context "Shipping zone list add button text" %}">
-      <svg data-src="{% static "dashboard/images/add.svg" %}" />
+    <a href="{% url 'dashboard:shipping-zone-add' %}" class="btn-fab-default waves-effect waves-light"
+       title="{% trans "Add shipping zone" context "Shipping zone list add button text" %}">
+      <svg data-src="{% static "dashboard/images/add.svg" %}"/>
     </a>
   </div>
 {% endblock %}
@@ -38,36 +39,45 @@
           <div class="data-table-container">
             <table class="bordered highlight responsive data-table">
               <thead>
-                <tr>
-                  {% trans "Shipping zone" context "Shipping zones table header, name of the shipping zone" as label %}
-                  {% sorting_header 'name' label is_wide=True %}
+              <tr>
+                {% trans "Shipping zone" context "Shipping zones table header, name of the shipping zone" as label %}
+                {% sorting_header 'name' label is_wide=True %}
 
-                  <th>
-                    {% trans "Price range" context "Shipping zones table header, price range of shipping methods within shipping zone" %}
-                  </th>
-                  <th class="wide">
-                    {% trans "Countries" context "Shipping zones table header, list of countries within of shipping zone" %}
-                  </th>
-                </tr>
+                <th>
+                  {% trans "Price range" context "Shipping zones table header, price range of shipping methods within shipping zone" %}
+                </th>
+                <th class="wide">
+                  {% trans "Countries" context "Shipping zones table header, list of countries within of shipping zone" %}
+                </th>
+                <th></th>
+              </tr>
               </thead>
               <tbody>
-                {% for shipping_zone in shipping_zones %}
-                  <tr data-action-go="{% url 'dashboard:shipping-zone-details' pk=shipping_zone.pk %}">
-                    <td>
+              {% for shipping_zone in shipping_zones %}
+                <tr>
+                  <td>
+                    <a href="{% url 'dashboard:shipping-zone-details' pk=shipping_zone.pk %}">
                       {{ shipping_zone }}
-                    </td>
-                    <td>
-                      {% if not shipping_zone.price_range %}
-                        -
-                      {% else %}
-                        {% price shipping_zone.price_range %}
-                      {% endif %}
-                    </td>
-                    <td>
-                      {{ shipping_zone.countries_display }}
-                    </td>
-                  </tr>
-                {% endfor %}
+                    </a>
+                  </td>
+                  <td>
+                    {% if not shipping_zone.price_range %}
+                      -
+                    {% else %}
+                      {% price shipping_zone.price_range %}
+                    {% endif %}
+                  </td>
+                  <td>
+                    {{ shipping_zone.countries_display }}
+                  </td>
+                  <td>
+                    <a class="btn-flat waves-effect modal-trigger-custom" href="#base-modal"
+                       data-href="{% url 'dashboard:shipping-zone-delete' shipping_zone.pk %}">
+                      <i class="fas fa-trash-alt fa-2x"></i>
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
               </tbody>
             </table>
           </div>
