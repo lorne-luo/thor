@@ -85,14 +85,10 @@ def get_id_photo_back_path(instance, filename):
 
 
 class Address(PinYinFieldModelMixin, ResizeUploadedImageModelMixin, models.Model):
-    first_name = models.CharField(pgettext_lazy(
-        "Customer form: Given name field", "Given name"
-    ), max_length=256, blank=True)
+    first_name = models.CharField(_('姓名'), max_length=256, blank=True)
     last_name = models.CharField(max_length=256, blank=True)
     company_name = models.CharField(max_length=256, blank=True)
-    street_address_1 = models.CharField(pgettext_lazy(
-        "Address", "Address"
-    ), max_length=256, blank=True)
+    street_address_1 = models.CharField(_('街道地址'), max_length=256, blank=True)
     street_address_2 = models.CharField(max_length=256, blank=True)
     city = models.CharField(pgettext_lazy(
         "City", "City"
@@ -140,6 +136,10 @@ class Address(PinYinFieldModelMixin, ResizeUploadedImageModelMixin, models.Model
     def __init__(self, *args, **kwargs):
         super(Address, self).__init__(*args, **kwargs)
         self._state.id_number = self.id_number
+
+    @cached_property
+    def customer(self):
+        return self.user_addresses.order_by('id').first()
 
     @property
     def province(self):

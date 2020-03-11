@@ -2,7 +2,7 @@
 # Copyright (C) 2017 Mirumee Software
 # This file is distributed under the same license as the Saleor package.
 # Mirumee Software <hello@mirumee.com>, 2017.
-# 
+#
 # Translators:
 # dr.web mike <cncaiker@gmail.com>, 2018
 # Slade Liu <laplaceliu@outlook.com>, 2019
@@ -12,7 +12,7 @@
 # Julian Hu <julianhy@gmail.com>, 2019
 # 陈 铭轩 <cmx18682659373@gmail.com>, 2019
 # Patryk Zawadzki <patrys@room-303.com>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -2899,12 +2899,12 @@ msgstr "添加备注"
 #: templates/dashboard/customer/detail.html:181
 msgctxt "Customer default shipping address card title"
 msgid "Default shipping address"
-msgstr "默认配送地址"
+msgstr "默认地址"
 
 #: templates/dashboard/customer/detail.html:188
 msgctxt "Customer without default shipping address message"
 msgid "No default shipping address."
-msgstr "没有默认配送地址"
+msgstr "没有默认地址"
 
 #: templates/dashboard/customer/detail.html:201
 msgctxt "Customer default billing address card title"

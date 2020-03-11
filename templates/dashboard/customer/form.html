@@ -90,18 +90,20 @@
                   <div class="row {% if forloop.counter0|divisibleby:2 %}even{% else %}odd{% endif %}"
                        id="{{ address_forms.prefix }}-{{ forloop.counter0 }}"
                     {% if address.instance.pk %} data-pk="{{ address.instance.pk }}"{% endif %}>
-                    {{ address.id }}
-                    {{ address.first_name|materializecss:"input-field s6" }}
-                    {{ address.phone|materializecss:"input-field s6" }}
-                    {{ address.street_address_1|materializecss:"input-field s6" }}
-                    {{ address.id_number|materializecss:"input-field s6" }}
-                    <div class="input input-field col s6">
-                      {{ address.id_photo_front.label_tag }}
-                      {{ address.id_photo_front }}
-                    </div>
-                    <div class="input input-field col s6">
-                      {{ address.id_photo_back.label_tag }}
-                      {{ address.id_photo_back }}
+                    <div id="address_{{ address.id.value }}">
+                      {{ address.id }}
+                      {{ address.first_name|materializecss:"input-field s6" }}
+                      {{ address.phone|materializecss:"input-field s6" }}
+                      {{ address.street_address_1|materializecss:"input-field s6" }}
+                      {{ address.id_number|materializecss:"input-field s6" }}
+                      <div class="input input-field col s6">
+                        {{ address.id_photo_front.label_tag }}
+                        {{ address.id_photo_front }}
+                      </div>
+                      <div class="input input-field col s6">
+                        {{ address.id_photo_back.label_tag }}
+                        {{ address.id_photo_back }}
+                      </div>
                     </div>
                   </div>
                 {% endfor %}

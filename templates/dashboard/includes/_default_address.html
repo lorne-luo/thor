@@ -8,11 +8,6 @@
        class="phone-number">
       {{ address.first_name }}
     </a>
-
-    <a href="{% url "dashboard:customer-update" pk=address.customer.id %}#address_{{ address.id }}"
-        class="right">
-      设为默认
-    </a>
   </div>
 
   <div>
@@ -30,5 +25,5 @@
       {{ address.street_address_1 }}
     </a>
   </div>
-  <br/>
+
 </div>
