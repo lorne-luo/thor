@@ -9,8 +9,7 @@
       {{ address.first_name }}
     </a>
 
-    <a href="{% url "dashboard:customer-update" pk=address.customer.id %}#address_{{ address.id }}"
-        class="right">
+    <a href="{% url "dashboard:set-default-address" pk=address.id %}" class="right">
       设为默认
     </a>
   </div>

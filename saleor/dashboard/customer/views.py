@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Q
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.context_processors import csrf
 from django.template.response import TemplateResponse
@@ -13,7 +13,7 @@ from .forms import CustomerDeleteForm, CustomerForm, CustomerNoteForm, AddressFo
 from ..emails import send_set_password_email
 from ..views import staff_member_required
 from ...account import events as account_events
-from ...account.models import CustomerNote, User
+from ...account.models import CustomerNote, User, Address
 from ...core.utils import get_paginator_items
 
 
@@ -100,6 +100,19 @@ def customer_edit(request, pk=None):
            "address_forms": address_formset,
            }
     return TemplateResponse(request, "dashboard/customer/form.html", ctx)
+
+
+@staff_member_required
+@permission_required("account.manage_users")
+def set_default_address(request, pk=None):
+    try:
+        address = Address.objects.get(id=pk)
+        customer = address.customer
+        customer.default_shipping_address = address
+        customer.save(update_fields=['default_shipping_address'])
+    except User.DoesNotExist:
+        pass
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
 @staff_member_required
